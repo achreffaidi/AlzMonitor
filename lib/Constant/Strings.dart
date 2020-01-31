@@ -1,0 +1,1 @@
+String baseUrl ="https://i-remember.azurewebsites.net/";
