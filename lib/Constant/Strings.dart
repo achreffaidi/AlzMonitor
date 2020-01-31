@@ -1,1 +1,1 @@
-String baseUrl ="https://i-remember.azurewebsites.net/";
+String baseUrl ="https://i-remember2.azurewebsites.net/";
