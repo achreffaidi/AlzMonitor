@@ -11,6 +11,7 @@ import 'package:monitor/UI/ExtandBrain/ExtandBrain.dart';
 import 'package:monitor/UI/Memories/MemoryDetails.dart';
 import 'package:monitor/UI/Memories/addMemories.dart';
 import 'package:http/http.dart' as http;
+import 'package:monitor/UI/Settings/Settings.dart';
 
 class User extends StatefulWidget {
 
@@ -74,6 +75,15 @@ class _UserState extends State<User> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => ExtandBrain()),
+                    );
+                  }),
+                ),
+                Container(
+                  margin: EdgeInsets.symmetric(horizontal: 20,vertical: 20),
+                  child: GestureDetector(child : Card( color: c1,child: Container(width : 500 , height: 50,child: Center(child: Text("Settings" , style: TextStyle(fontSize: 25 , color: Colors.white),)))),onTap: (){
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => Settings()),
                     );
                   }),
                 ),

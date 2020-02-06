@@ -6,9 +6,9 @@ import 'package:monitor/Api/PersonAdd.dart';
 import 'package:monitor/Constant/Strings.dart';
 import 'package:monitor/Constant/colors.dart';
 import 'package:http/http.dart' as http;
+import 'package:monitor/UI/Layout/MainLayout.dart';
 import 'package:monitor/tools/Images.dart';
 import 'package:progress_dialog/progress_dialog.dart';
-
 
 class ExtandBrain extends StatefulWidget {
   @override
@@ -28,58 +28,23 @@ class _ExtandBrainState extends State<ExtandBrain> {
   @override
   Widget build(BuildContext context) {
     if (_image != null) preview_path = _image.path;
-    return Scaffold(
-      body: Container(
-        color: c1,
-        child: Column(
-          children: <Widget>[_getHeader(), _getBody()],
-        ),
-      ),
-    );
+    return getMainLayout("Train Face Recognition" , _getBody() , context ) ;
   }
 
   Widget _getBody() {
-    return Container(
-      decoration: new BoxDecoration(
-        color: Colors.white,
-        borderRadius: new BorderRadius.only(topLeft: Radius.circular(70.0)),
-        boxShadow: [
-          new BoxShadow(
-            color: Colors.grey,
-            blurRadius: 5,
-            spreadRadius: 0.2,
-            offset: new Offset(-3, -2.0),
-          )
-        ],
-      ),
-      child: Container(
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height - headerSize,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              _getSelect(),
-              getImage() ,
-              Center(
-                child: Container( margin : EdgeInsets.only(top: 40),child: RaisedButton.icon(color: c1 , icon: Icon(Icons.add, color : Colors.white,size: 30,), onPressed: (){
-                  uploadImage() ;                } , label: Container(width:200,padding: EdgeInsets.all(8),child: Text("Add Image",style: TextStyle( color:Colors.white , fontSize: 30),textAlign: TextAlign.center,)),),),
-              )
-            ],
-          )),
-    );
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        _getSelect(),
+        getImage() ,
+        Center(
+          child: Container( margin : EdgeInsets.only(top: 40),child: RaisedButton.icon(color: c1 , icon: Icon(Icons.add, color : Colors.white,size: 30,), onPressed: (){
+            uploadImage() ;                } , label: Container(width:200,padding: EdgeInsets.all(8),child: Text("Add Image",style: TextStyle( color:Colors.white , fontSize: 30),textAlign: TextAlign.center,)),),),
+        )
+      ],
+    ) ;
   }
 
-  Widget _getHeader() {
-    return Container(
-      height: headerSize,
-      child: Center(
-          child: Text(
-        "Train Face Recognition",
-        style: TextStyle(
-            fontSize: 30, color: Colors.white, fontWeight: FontWeight.bold),
-      )),
-    );
-  }
 
   Widget _getSelect() {
     return Container(
