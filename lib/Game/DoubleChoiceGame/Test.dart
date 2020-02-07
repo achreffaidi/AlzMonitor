@@ -3,9 +3,6 @@ import 'package:toast/toast.dart';
 
 abstract class Test{
 
-
-
-
   Test(int s , BuildContext context){
     this.context = context;
     correct = s ;

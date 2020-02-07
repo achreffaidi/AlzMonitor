@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:monitor/Api/SettingVoice.dart';
 import 'package:monitor/UI/Layout/MainLayout.dart';
@@ -120,7 +123,7 @@ class _SettingsState extends State<Settings> {
         }) ,
         Container(child: Text(_getName(item.shortName))) ,
         RaisedButton.icon(onPressed: (){
-
+          _playTestExample(item.shortName,item.locale);
 
         }
         , icon: Icon(Icons.play_arrow,color: Colors.green,), label:Text("Play") )
@@ -140,6 +143,41 @@ class _SettingsState extends State<Settings> {
       return shortName ;
     }
   }
+
+
+
+  void _playTestExample(String name , String local)async{
+
+
+    http.get(baseUrl+"getVoiceSimple", headers: {
+      "ShortName": name,
+      "Locale": local
+    }).then((http.Response response){
+
+      print(response.body);
+      print(response.headers);
+      if(response.headers.containsKey("voice")) play(response.headers["voice"]) ;
+    });
+
+  }
+  AudioPlayer audioPlayer ;
+
+  play(String url ) async {
+
+    print(url);
+    AudioPlayer.logEnabled = true;
+    audioPlayer = AudioPlayer();
+
+    int result = await audioPlayer.play(url);
+
+    if (result == 1) {
+      // success
+    }
+  }
+
+
+
+
 }
 
 
