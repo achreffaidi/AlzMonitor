@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:monitor/Api/GameCategories.dart';
 import 'package:monitor/Api/SettingVoice.dart';
 import 'package:monitor/UI/Layout/MainLayout.dart';
 import 'package:http/http.dart' as http;
@@ -18,12 +19,15 @@ class Settings extends StatefulWidget {
 class _SettingsState extends State<Settings> {
 
   Voices voices ;
+  GameCategories categories ;
+  List<bool> isChecked  ;
 
 
 
   @override
   void initState() {
     _loadListOfVoices() ;
+    _loadListOfCategories();
     super.initState();
   }
   @override
@@ -39,7 +43,8 @@ class _SettingsState extends State<Settings> {
         child: Column(
 
           children: <Widget>[
-              _getSettingBlock("Voices" , _getVoiceSettings() )
+              _getSettingBlock("Voices" , _getVoiceSettings() ),
+              _getSettingBlock("Game Settings" , _getGameSettings() ),
           ],
         ),
       ),
@@ -50,9 +55,10 @@ class _SettingsState extends State<Settings> {
 
   _getSettingBlock(String title, Widget widget) {
     return Container(
-
+      margin: EdgeInsets.symmetric(horizontal: 20 , vertical: 20),
         child:
       Card(
+        color: Colors.white,
         child: 
         Container(
           child : Column(
@@ -86,7 +92,25 @@ class _SettingsState extends State<Settings> {
                }
            ),
          ) ;
-    
+
+
+  }
+  Widget _getGameSettings() {
+       if(categories==null) return CircularProgressIndicator();
+       return
+         Container(
+           height: 300,
+           child: new ListView.builder
+             (
+               physics: const NeverScrollableScrollPhysics(),
+             scrollDirection: Axis.vertical,
+               itemCount: categories.categoriesList.length,
+               itemBuilder: (BuildContext ctxt, int index) {
+                 return _getCategoryItem(categories.categoriesList[index],index);
+               }
+           ),
+         ) ;
+
 
   }
 
@@ -103,9 +127,23 @@ class _SettingsState extends State<Settings> {
       }
 
     });
+  }
 
+  void _loadListOfCategories(){
 
+    http.get(baseUrl+"photosGame/getCategories").then((http.Response response){
 
+      if(response.statusCode==200){
+
+        categories = GameCategories.fromJson(response.body);
+        isChecked = new List(categories.categoriesList.length);
+        for(int i =0 ; i<isChecked.length;i++) isChecked[i] = false ;
+        setState(() {
+
+        });
+      }
+
+    });
   }
 
   int _groupValue = 0 ;
@@ -127,6 +165,26 @@ class _SettingsState extends State<Settings> {
 
         }
         , icon: Icon(Icons.play_arrow,color: Colors.green,), label:Text("Play") )
+
+      ],
+    )
+    ) ;
+  }
+
+  Widget _getCategoryItem(CategoriesList item , index) {
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 20 , vertical: 5),
+        child :
+    Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: <Widget>[
+        Checkbox(  value: isChecked[index], onChanged: (value){
+            setState(() {
+              isChecked[index] = !isChecked[index];
+            });
+        }) ,
+        Container(child: Text(item.category)) ,
+
 
       ],
     )
