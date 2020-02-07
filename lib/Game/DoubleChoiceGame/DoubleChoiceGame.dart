@@ -1,11 +1,15 @@
 import 'dart:collection';
+import 'dart:convert';
 
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:toast/toast.dart';
 
+import '../../Constant/Strings.dart';
 import '../../Constant/colors.dart';
 import 'LettersTest.dart';
 import 'Test.dart';
+import 'package:http/http.dart' as http;
 
 
 
@@ -221,6 +225,7 @@ class _DoubleChoiceGameState extends State<DoubleChoiceGame> {
 
  void generateTest(){
       Test x = tests.last ;
+      sayIt(x.question);
       tests.removeLast() ;
       content = Container(
         height: 500,
@@ -258,5 +263,38 @@ class _DoubleChoiceGameState extends State<DoubleChoiceGame> {
     Toast.show(correct?"True":"False", context );
     generateTest();
  }
+
+
+  void sayIt(String s)async{
+    var params = {
+      "text": s,
+    };
+
+    http.post(baseUrl+"speech" ,body: json.encode(params) , headers: {
+      "Content-Type":"application/json"
+    }).then((http.Response response){
+
+      print(response.statusCode);
+      print(response.headers);
+      if(response.headers.containsKey("voice")) play(response.headers["voice"]) ;
+      print("voice") ;
+    });
+
+  }
+  AudioPlayer audioPlayer ;
+
+  play(String url ) async {
+
+    print(url);
+    AudioPlayer.logEnabled = true;
+    audioPlayer = AudioPlayer();
+
+    int result = await audioPlayer.play(url);
+
+
+    if (result == 1) {
+      // success
+    }
+  }
 
 }

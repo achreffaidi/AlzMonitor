@@ -84,6 +84,15 @@ class _UserState extends State<User> {
                   child: GestureDetector(child : Card( color: c1,child: Container(width : 500 , height: 50,child: Center(child: Text("Settings" , style: TextStyle(fontSize: 25 , color: Colors.white),)))),onTap: (){
                     Navigator.push(
                       context,
+                      MaterialPageRoute(builder: (context) => Settings()),
+                    );
+                  }),
+                ),
+                Container(
+                  margin: EdgeInsets.symmetric(horizontal: 20,vertical: 20),
+                  child: GestureDetector(child : Card( color: c1,child: Container(width : 500 , height: 50,child: Center(child: Text("DoubleChoiceGame" , style: TextStyle(fontSize: 25 , color: Colors.white),)))),onTap: (){
+                    Navigator.push(
+                      context,
                       MaterialPageRoute(builder: (context) => DoubleChoiceGame()),
                     );
                   }),
