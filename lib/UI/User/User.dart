@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_marker_cluster/flutter_map_marker_cluster.dart';
 import 'package:latlong/latlong.dart';
+import 'package:monitor/Game/DoubleChoiceGame/DoubleChoiceGame.dart';
 import 'package:monitor/UI/ExtandBrain/ExtandBrain.dart';
 import 'package:monitor/UI/Memories/MemoryDetails.dart';
 import 'package:monitor/UI/Memories/addMemories.dart';
@@ -83,7 +84,7 @@ class _UserState extends State<User> {
                   child: GestureDetector(child : Card( color: c1,child: Container(width : 500 , height: 50,child: Center(child: Text("Settings" , style: TextStyle(fontSize: 25 , color: Colors.white),)))),onTap: (){
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => Settings()),
+                      MaterialPageRoute(builder: (context) => DoubleChoiceGame()),
                     );
                   }),
                 ),
