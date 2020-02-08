@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:monitor/Api/DeviceState.dart';
 import 'package:monitor/Api/Tips.dart';
 import 'package:monitor/Api/memories.dart';
 import 'package:monitor/Api/tasks.dart';
@@ -37,6 +40,10 @@ class _HomeScreenState extends State<HomeScreen> {
   List<List<ListElement>> days  = new List();
   double headerSize = 100 ;
   Widget tasksHolder ;
+
+  String _Battery ="loading .. " ;
+  String _LastSeen ="loading .. " ;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -55,6 +62,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
+    const oneSec = const Duration(seconds:60);
+    new Timer.periodic(oneSec, (Timer t) =>_loadDeviceState() );
+    _loadDeviceState() ;
     loadTips();
     loadTasks();
   }
@@ -332,11 +342,15 @@ Widget getUserDetails(){
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
         Container(child: Text("Mr. Bean" , style: TextStyle(fontSize: 30),),) ,
-        Container(child: Text("Device: Connected 📳" , style: TextStyle(fontSize: 20),),) ,
+        Container(child: Text("Battery State : "+_Battery , style: TextStyle(fontSize: 17),),) ,
+        Container(child: Text("Last Seen : "+_LastSeen , style: TextStyle(fontSize: 17),),) ,
         ],)
       ,);
 
 }
+
+
+
 
 Widget getTips(){
   return tips==null? Container():
@@ -509,7 +523,29 @@ void loadTasks() async {
 
   }
 
+  void _loadDeviceState(){
+  http.get(baseUrl+"getPhoneState").then((http.Response response){
 
+    if(response.statusCode == 200){
+      DeviceState  ds = DeviceState.fromJson(response.body)   ;
+      _LastSeen  = _convertTime(ds.difference)  ;
+      _Battery = ds.battery.toString()+"%" ;
+
+      setState(() {
+
+      });
+    }
+  }) ;
+
+
+  }
+
+  String _convertTime(int s ){
+
+  if(s<60) return "Connected" ;
+  if(s<3600) return (s/60).floor().toString()+" minuts" ;
+  return (s/3600).floor().toString()+" hours" ;
+  }
 
 
 
