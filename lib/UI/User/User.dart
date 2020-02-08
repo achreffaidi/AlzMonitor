@@ -1,4 +1,5 @@
 import 'package:carousel_pro/carousel_pro.dart';
+import 'package:google_map_location_picker/google_map_location_picker.dart';
 import 'package:monitor/Api/location.dart';
 import 'package:monitor/Api/memories.dart';
 import 'package:monitor/Constant/Strings.dart';
@@ -13,6 +14,9 @@ import 'package:monitor/UI/Memories/MemoryDetails.dart';
 import 'package:monitor/UI/Memories/addMemories.dart';
 import 'package:http/http.dart' as http;
 import 'package:monitor/UI/Settings/Settings.dart';
+
+import 'LocationPicker.dart';
+
 
 class User extends StatefulWidget {
 
@@ -98,12 +102,8 @@ class _UserState extends State<User> {
                   }),
                 ),
                 getMemories(),
-                Container(
-                  margin: EdgeInsets.only(top: 40,right: 20,left: 20),
-                  child: Text("GeoLocalisation" , style: TextStyle(fontSize: 30),),
-                ),
+                getMapWidget(),
 
-                mapIsReady?getMap(context):Container()
               ],)
         ),
       ),
@@ -146,6 +146,9 @@ class _UserState extends State<User> {
     http.get(baseUrl+"location").then((http.Response response){
 
        location = Location.fromJson(response.body) ;
+       //TODO  Remove this
+       location.latitude = "36.8" ;
+       location.longitude = "10.15" ;
        mapIsReady = true ;
        setState(() {
 
@@ -169,6 +172,7 @@ class _UserState extends State<User> {
   Widget _getMap(BuildContext context) {
 
 
+
     return new FlutterMap(
       options: new MapOptions(
         center: LatLng(double.parse( location.latitude ) ,double.parse( location.longitude )),
@@ -178,9 +182,11 @@ class _UserState extends State<User> {
         ],
       ),
       layers: [
-        TileLayerOptions(
-          urlTemplate: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-          subdomains: ['a', 'b', 'c'],
+        new TileLayerOptions(
+          urlTemplate: "https://atlas.microsoft.com/map/tile/png?api-version=1&layer=basic&style=main&tileSize=256&view=Auto&zoom={z}&x={x}&y={y}&subscription-key={subscriptionKey}",
+          additionalOptions: {
+            'subscriptionKey': 'cqq6XOiiBJVwgSUb2EfrzI3mDb63ZpKyOrX5cK2ZKJk'
+          },
         ),
         MarkerClusterLayerOptions(
           showPolygon: false,
@@ -269,6 +275,30 @@ class _UserState extends State<User> {
               ],
             ),
           ),          getCarsoulet(),
+        ],
+      ),
+    );
+
+  }
+  Widget getMapWidget(){
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Container(
+            margin: EdgeInsets.only(top: 40,right: 20,left: 20),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                  Text("Map" , style: TextStyle(fontSize: 30),),
+                  RaisedButton.icon( color : c1 ,  onPressed: (){
+                    getLocationPicker(context);
+                  }, icon: Icon(Icons.add , color: Colors.white,), label: Text("Settings",style: TextStyle(color: Colors.white),))
+                ,
+              ],
+            ),
+          ),           mapIsReady?getMap(context):Container()
         ],
       ),
     );

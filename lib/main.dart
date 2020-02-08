@@ -7,7 +7,7 @@ import 'package:monitor/tools/Images.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-
+import 'package:google_map_location_picker/generated/i18n.dart' as location_picker;
 import 'UI/HomeScreen.dart';
 
 void main() => runApp(MyApp());
@@ -34,6 +34,14 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
+      localizationsDelegates: const [
+        location_picker.S.delegate,
+
+      ],
+      supportedLocales: const <Locale>[
+        Locale('en', ''),
+        Locale('ar', ''),
+      ],
       home: MyHomePage(),
 
     );
