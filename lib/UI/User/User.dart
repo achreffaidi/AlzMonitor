@@ -1,4 +1,5 @@
 import 'package:carousel_pro/carousel_pro.dart';
+import 'package:flutter_fluid_slider/flutter_fluid_slider.dart';
 import 'package:google_map_location_picker/google_map_location_picker.dart';
 import 'package:monitor/Api/location.dart';
 import 'package:monitor/Api/memories.dart';
@@ -16,6 +17,7 @@ import 'package:http/http.dart' as http;
 import 'package:monitor/UI/Settings/Settings.dart';
 
 import 'LocationPicker.dart';
+import 'MapSettingsPopUp.dart';
 
 
 class User extends StatefulWidget {
@@ -143,12 +145,10 @@ class _UserState extends State<User> {
 
   Widget getLocation(){
 
-    http.get(baseUrl+"location").then((http.Response response){
+    http.get(baseUrl+"getPosition").then((http.Response response){
 
        location = Location.fromJson(response.body) ;
-       //TODO  Remove this
-       location.latitude = "36.8" ;
-       location.longitude = "10.15" ;
+
        mapIsReady = true ;
        setState(() {
 
@@ -175,7 +175,7 @@ class _UserState extends State<User> {
 
     return new FlutterMap(
       options: new MapOptions(
-        center: LatLng(double.parse( location.latitude ) ,double.parse( location.longitude )),
+        center: LatLng( location.latitude  ,location.longitude ),
         zoom: 15,
         plugins: [
           MarkerClusterPlugin(),
@@ -228,7 +228,7 @@ class _UserState extends State<User> {
 
   Widget getMap(BuildContext context){
     points = [
-      LatLng(double.parse( location.latitude ) ,double.parse( location.longitude )),
+      LatLng(location.latitude , location.longitude ),
     ];
     pointIndex = 0;
     markers = [
@@ -293,7 +293,7 @@ class _UserState extends State<User> {
               children: <Widget>[
                   Text("Map" , style: TextStyle(fontSize: 30),),
                   RaisedButton.icon( color : c1 ,  onPressed: (){
-                    getLocationPicker(context);
+                    showMapPopUp() ;
                   }, icon: Icon(Icons.add , color: Colors.white,), label: Text("Settings",style: TextStyle(color: Colors.white),))
                 ,
               ],
@@ -338,6 +338,14 @@ class _UserState extends State<User> {
         },
       ),
     );
+  }
+
+  void showMapPopUp() async {
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) =>
+          MapSettingsPopUp());
   }
 
 

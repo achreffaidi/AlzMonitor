@@ -121,9 +121,21 @@ class _SettingsState extends State<Settings> {
       if(response.statusCode==200){
 
         voices = Voices.fromJson(response.body);
-        setState(() {
 
-        });
+        http.get(baseUrl+"getVoiceChoice").then((http.Response response ){
+
+          for(int i = 0 ; i<voices.list.length;i++){
+
+            if(voices.list[i].shortName == response.body)  _groupValue = i ;
+
+          }
+
+          setState(() {
+
+          });
+
+        }) ;
+
       }
 
     });
