@@ -1,14 +1,23 @@
 import 'dart:io';
 
+import 'package:flare_flutter/flare_actor.dart';
 import 'package:flare_splash_screen/flare_splash_screen.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
+import 'package:kf_drawer/kf_drawer.dart';
 import 'package:monitor/tools/CameraController.dart';
 import 'package:monitor/tools/Images.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:google_map_location_picker/generated/i18n.dart' as location_picker;
+import 'Constant/colors.dart';
+import 'UI/ExtandBrain/ExtandBrain.dart';
 import 'UI/HomeScreen.dart';
+import 'UI/Profile/ProfileUI.dart';
+import 'UI/Settings/Settings.dart';
+import 'UI/SubMain.dart';
+import 'UI/User/User.dart';
 
 void main() => runApp(MyApp());
 
@@ -66,29 +75,104 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
+
+
+
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
 
 
+  KFDrawerController _drawerController;
+
+  @override
+  void initState() {
+
+    TextStyle textStyle = new TextStyle(color: Colors.white , fontWeight: FontWeight.bold , fontSize: 30) ;
+    _drawerController = KFDrawerController(
+      initialPage: SubMain(),
+
+      items: [
+        KFDrawerItem.initWithPage(
+          text: Text('Profile', style: textStyle),
+          icon: Icon(Icons.home, color: Colors.white),
+          page: ProfileUI(),
+        ),
+        KFDrawerItem.initWithPage(
+          text: Text('Patient', style: textStyle),
+          icon: Icon(Icons.home, color: Colors.white),
+          page: SubMain(),
+        ),
+        KFDrawerItem.initWithPage(
+          text: Text(
+            'Face Recognition',
+            style: textStyle,
+          ),
+          icon: Icon(Icons.cloud_upload, color: Colors.white),
+          page: ExtandBrain(),
+        ),
+        KFDrawerItem.initWithPage(
+          text: Text(
+            'SETTINGS',
+            style: textStyle,
+          ),
+          icon: Icon(Icons.settings, color: Colors.white),
+          page: Settings(),
+        ),
+        KFDrawerItem.initWithPage(
+          text: Container(height: 300,),
+          icon: Container(),
+          page: HomeScreen(),
+        ),
+      ],
+    );
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
+      body: KFDrawer(
+        controller: _drawerController,
 
-      body: HomeScreen(),/*Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Container(
-          child : _getChild()
+        header: Align(
+          alignment: Alignment.centerLeft,
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 16.0),
+            width: MediaQuery.of(context).size.width * 0.6,
+            child: Container(
+              margin: EdgeInsets.only(top : 30),
+                height: 150,
+                width: 150,
+                child: FlareActor("assets/heartbeat.flr", alignment:Alignment.center, fit:BoxFit.contain, animation:"Untitled")),
+          ),
         ),
-      )*/
-       // This trailing comma makes auto-formatting nicer for build methods.
+        footer: KFDrawerItem(
+          text: Text(
+            'SIGN IN',
+            style: TextStyle(color: Colors.white),
+          ),
+          icon: Icon(
+            Icons.input,
+            color: Colors.white,
+          ),
+          onPressed: () {
+            Navigator.of(context).push(CupertinoPageRoute(
+              fullscreenDialog: true,
+              builder: (BuildContext context) {
+                return HomeScreen();
+              },
+            ));
+          },
+        ),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [Color.fromRGBO(166, 114, 255, 1.0), Color.fromRGBO(109, 91, 254, 1.0)],
+            tileMode: TileMode.clamp,
+          ),
+        ),
+      ),
     );
   }
 

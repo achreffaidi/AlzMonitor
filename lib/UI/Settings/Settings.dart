@@ -2,16 +2,18 @@ import 'dart:convert';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:kf_drawer/kf_drawer.dart';
 import 'package:monitor/Api/GameCategories.dart';
 import 'package:monitor/Api/SettingVoice.dart';
 import 'package:monitor/UI/Layout/MainLayout.dart';
 import 'package:http/http.dart' as http;
+import 'package:toast/toast.dart';
 
 import '../../Constant/Strings.dart';
 
 
 
-class Settings extends StatefulWidget {
+class Settings extends KFDrawerContent {
   @override
   _SettingsState createState() => _SettingsState();
 }
@@ -21,13 +23,14 @@ class _SettingsState extends State<Settings> {
   Voices voices ;
   GameCategories categories ;
   List<bool> isChecked  ;
-
+  var emergencyNumber ;
 
 
   @override
   void initState() {
     _loadListOfVoices() ;
     _loadListOfCategories();
+    _loadEmergencyNumber() ;
     super.initState();
   }
   @override
@@ -45,6 +48,8 @@ class _SettingsState extends State<Settings> {
           children: <Widget>[
               _getSettingBlock("Voices" , _getVoiceSettings() ),
               _getSettingBlock("Game Settings" , _getGameSettings() ),
+              _getSettingBlock("Emergency Number" , _getEmergencyNumberSettings() ),
+
           ],
         ),
       ),
@@ -109,6 +114,33 @@ class _SettingsState extends State<Settings> {
                  return _getCategoryItem(categories.categoriesList[index],index);
                }
            ),
+         ) ;
+
+
+  }
+
+  TextEditingController _textEditingController = new TextEditingController();
+  Widget _getEmergencyNumberSettings() {
+       if(emergencyNumber==null) return CircularProgressIndicator();
+       return
+         Container(
+             margin: EdgeInsets.symmetric(horizontal: 30 , vertical: 20),
+
+             height: 200,
+           child   : Column(
+             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+             children: <Widget>[
+           TextField(
+             controller: _textEditingController,
+           decoration: InputDecoration(
+               labelText: "Emergency Number",
+               hintText: "Emergency Number"
+           ),
+         ) ,
+
+             RaisedButton.icon(onPressed: _updateEmergencyNumber, icon: Icon(Icons.update), label: Text("Update"))
+
+           ],)
          ) ;
 
 
@@ -248,6 +280,32 @@ class _SettingsState extends State<Settings> {
 
 
 
+
+  void _loadEmergencyNumber() async {
+
+    http.get(baseUrl+"getEmergencyNumber").then((http.Response response){
+
+      var parsedJson = json.decode(response.body);
+      emergencyNumber =  parsedJson["number"] ;
+      _textEditingController.text = emergencyNumber;
+      setState(() {
+
+      });
+
+    });
+
+  }
+
+  void _updateEmergencyNumber() async {
+    
+    http.post(baseUrl+"setEmergencyNumber" , headers: {
+      "number" : _textEditingController.text.toString()
+    }).then((http.Response response){
+      if(response.statusCode==200){
+        Toast.show("Successful", context) ;
+      }
+    });
+  }
 }
 
 

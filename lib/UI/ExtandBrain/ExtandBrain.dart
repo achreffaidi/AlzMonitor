@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:kf_drawer/kf_drawer.dart';
 import 'package:monitor/Api/PersonAdd.dart';
 import 'package:monitor/Constant/Strings.dart';
 import 'package:monitor/Constant/colors.dart';
@@ -10,7 +11,7 @@ import 'package:monitor/UI/Layout/MainLayout.dart';
 import 'package:monitor/tools/Images.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 
-class ExtandBrain extends StatefulWidget {
+class ExtandBrain extends KFDrawerContent {
   @override
   _ExtandBrainState createState() => _ExtandBrainState();
 }

@@ -33,8 +33,8 @@ class ListByDay {
   bool done;
   int day;
 
-  ListElement getElement(){
-    return new ListElement(id:id,day:day,time: time,done: done,title: title);
+  ListByDay getElement(){
+    return new ListByDay(id:id,day:day,time: time,done: done,title: title);
   }
 
   ListByDay({

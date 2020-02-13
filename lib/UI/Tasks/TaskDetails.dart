@@ -3,15 +3,16 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_time_picker_spinner/flutter_time_picker_spinner.dart';
 import 'package:monitor/Api/tasks.dart';
-import 'package:monitor/Api/tasksByDay.dart';
+import 'package:monitor/Api/tasksByDay.dart' as tsk;
 import 'package:monitor/Constant/Strings.dart';
 import 'package:monitor/Constant/colors.dart';
 import 'package:http/http.dart' as http;
 
 
+
 class TaskDetails extends StatefulWidget {
   
-  List<ListElement> list ; 
+  List<ListByDay> list ;
   @override
   _TaskDetailsState createState() => _TaskDetailsState(list);
 
@@ -20,9 +21,9 @@ class TaskDetails extends StatefulWidget {
 
 class _TaskDetailsState extends State<TaskDetails> {
   
-  List<ListElement> list ;
-  List<ListElement> done ;
-  List<ListElement> undone ;
+  List<ListByDay> list ;
+  List<ListByDay> done ;
+  List<ListByDay> undone ;
 
   _TaskDetailsState(this.list);
 
@@ -31,7 +32,7 @@ class _TaskDetailsState extends State<TaskDetails> {
 
     done = new List();
     undone = new List();
-    for(ListElement e in list) if(e.done){
+    for(ListByDay e in list) if(e.done){
       done.add(e) ;
     }else undone.add(e) ;
 
@@ -122,12 +123,12 @@ class _TaskDetailsState extends State<TaskDetails> {
             itemBuilder: (BuildContext ctxt, int index) {
               return  GestureDetector(
                 onLongPress: (){
-                  showDeletDialog(list[index].id,list[index].day) ;
+                  showDeletDialog(int.parse(list[index].id), list[index].day) ;
                 },
                 onTap: (){
                   list[index].done = !list[index].done ;
                   setState(() {
-                    list.sort((ListElement item1,ListElement item2){
+                    list.sort((ListByDay item1,ListByDay item2){
                       if(item1.done==item2.done)return 0 ;
                       if(item1.done&!item2.done)return 1 ;
                       return -1 ;
@@ -329,16 +330,17 @@ class _TaskDetailsState extends State<TaskDetails> {
     print(baseUrl+"getbyday/"+day.toString());
     http.get(baseUrl+"getbyday/"+day.toString()).then((http.Response response){
 
-      List<ListByDay> tasks = TasksByDay.fromJson(response.body).listByDay;
+      List<tsk.ListByDay> tasks = tsk.TasksByDay.fromJson(response.body).listByDay;
       print(response.body) ;
-      tasks.sort((ListByDay item1,ListByDay item2){
+      tasks.sort((tsk.ListByDay item1,tsk.ListByDay item2){
         if(item1.done==item2.done)return 0 ;
         if(item1.done&!item2.done)return 1 ;
         return -1 ;
       });
 
       list = new List() ;
-      for(ListByDay e in tasks) list.add(e.getElement()) ;
+      //TODO Fix This
+      //for(tsk.ListByDay e in tasks) list.add(e.getElement()) ;
       setState(() {
 
       });

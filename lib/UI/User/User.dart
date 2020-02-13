@@ -15,7 +15,11 @@ import 'package:monitor/UI/Memories/MemoryDetails.dart';
 import 'package:monitor/UI/Memories/addMemories.dart';
 import 'package:http/http.dart' as http;
 import 'package:monitor/UI/Settings/Settings.dart';
+import 'package:percent_indicator/circular_percent_indicator.dart';
+import 'package:percent_indicator/linear_percent_indicator.dart';
 
+import 'Graphs/Circuler.dart';
+import 'Graphs/TimeSerie.dart';
 import 'LocationPicker.dart';
 import 'MapSettingsPopUp.dart';
 
@@ -50,11 +54,10 @@ class _UserState extends State<User> {
 
   Widget _getBody() {
     return Container(
-      height: MediaQuery.of(context).size.height-headerSize,
+      height: MediaQuery.of(context).size.height-headerSize-56,
       decoration: new BoxDecoration(
         color: Colors.white,
         borderRadius: new BorderRadius.only(
-            topLeft:   Radius.circular(70.0)
 
         )
         ,
@@ -73,38 +76,13 @@ class _UserState extends State<User> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
+getCard(getTasksBoard(), 220) ,
+getCard(getDeviceBoard(), 200) ,
+getCard(getGameBoardLast(), 200) ,
+getCard(getGameBoardHist(), 260) ,
 
-                getUserImage() ,
-                getUserDetails(),
-                Container(
-                  margin: EdgeInsets.symmetric(horizontal: 20,vertical: 20),
-                  child: GestureDetector(child : Card( color: c1,child: Container(width : 500 , height: 50,child: Center(child: Text("Train Face Recognition " , style: TextStyle(fontSize: 25 , color: Colors.white),)))),onTap: (){
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => ExtandBrain()),
-                    );
-                  }),
-                ),
-                Container(
-                  margin: EdgeInsets.symmetric(horizontal: 20,vertical: 20),
-                  child: GestureDetector(child : Card( color: c1,child: Container(width : 500 , height: 50,child: Center(child: Text("Settings" , style: TextStyle(fontSize: 25 , color: Colors.white),)))),onTap: (){
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => Settings()),
-                    );
-                  }),
-                ),
-                Container(
-                  margin: EdgeInsets.symmetric(horizontal: 20,vertical: 20),
-                  child: GestureDetector(child : Card( color: c1,child: Container(width : 500 , height: 50,child: Center(child: Text("DoubleChoiceGame" , style: TextStyle(fontSize: 25 , color: Colors.white),)))),onTap: (){
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => DoubleChoiceGame()),
-                    );
-                  }),
-                ),
-                getMemories(),
-                getMapWidget(),
+
+
 
               ],)
         ),
@@ -112,10 +90,250 @@ class _UserState extends State<User> {
     );
   }
 
+
+  Widget getDeviceBoard(){
+
+    double size = (MediaQuery.of(context).size.width-100)/2 ;
+
+    return Container(
+      child :
+        Column(
+  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+
+           Text("Device State " , style : titleStyle),
+            Row(
+              children: <Widget>[
+                Container(
+                  width: size,
+                  child:
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      Text("Last Seen : 2 hours") ,
+                      Text("Position : In the Safe Zone") ,
+                    ],
+                  ),
+                ) ,
+                Container(
+                  width: size,
+                  child : new CircularPercentIndicator(
+                  radius  : size*0.6,
+                  lineWidth: 14.0,
+                  percent: 0.60,
+                  center: new Icon(Icons.battery_charging_full , size: 50,),
+                  progressColor: Colors.yellow,
+                ),)
+              ],
+            ),
+          ],
+        )
+    );
+
+
+
+  }
+
+
+  var titleStyle = TextStyle(fontSize: 20 , fontWeight: FontWeight.bold , color: c1);
+
+  Widget getGameBoardLast(){
+ double size = (MediaQuery.of(context).size.width-100)/2 ;
+    return
+        Container(
+          child  : Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              Text("Last game" , style: titleStyle,) ,
+
+              Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  Container(
+                    width: size,
+
+                    child:
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: <Widget>[
+
+                        Text("52",style: TextStyle(color: Colors.blue , fontWeight: FontWeight.bold,fontSize: 50),) ,
+                        Padding(
+                          padding: const EdgeInsets.only(bottom : 8.0 , left: 8),
+                          child: Text("Game Played",style: TextStyle(color: Colors.grey ,fontSize: 18),),
+                        ) ,
+                      ],) ,
+                  ) ,
+                  Container(
+                    width: size,
+
+                    child:
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+
+                        Row(children: <Widget>[
+
+                          Container(
+                            height: size/1.8 ,
+                            width: size/1.8,
+                            child: DonutPieChart.withSampleData(),
+                          ) ,
+                          Column(
+                            children: <Widget>[
+                              Row(children: <Widget>[Icon(Icons.adjust , color: Colors.green,) , Text("Correct")],),
+                              Row(children: <Widget>[Icon(Icons.adjust , color: Colors.red,) , Text("Wrong")],),
+                            ],
+                          )
+
+                        ],)
+                      ],
+                    ),
+                  ) ,
+
+
+
+                ],
+              ),
+            ],
+          )
+        ) ;
+
+  }
+  Widget getTasksBoard(){
+ double size = (MediaQuery.of(context).size.width-100)/2 ;
+    return
+        Container(
+          child  : Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              Text("Tasks" , style: titleStyle,) ,
+
+              Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  Container(
+                    width: size,
+
+                    child:
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: <Widget>[
+                        Icon(Icons.check_box ,color: Colors.green,size: 50,) ,
+                        Text("3/7",style: TextStyle(color: Colors.blue , fontWeight: FontWeight.bold,fontSize: 50),) ,
+                        Padding(
+                          padding: const EdgeInsets.only(bottom : 8.0 , left: 0),
+                          child: Text("Done",style: TextStyle(color: Colors.grey ,fontSize: 18),),
+                        ) ,
+                      ],) ,
+                  ) ,
+                  Container(
+                    width: size,
+
+                    child:
+                    Column(
+                      mainAxisSize: MainAxisSize.max,
+
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text("So Important"),
+                        ) ,
+                        LinearPercentIndicator(
+                          width: 140.0,
+                          lineHeight: 14.0,
+                          percent: 0.8,
+                          backgroundColor: Colors.grey,
+                          progressColor: Colors.red,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text("Important"),
+                        ) ,
+                        LinearPercentIndicator(
+                          width: 140.0,
+                          lineHeight: 14.0,
+                          percent: 0.2,
+                          backgroundColor: Colors.grey,
+                          progressColor: Colors.orange,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text("Normal"),
+                        ) ,
+                        LinearPercentIndicator(
+                          width: 140.0,
+                          lineHeight: 14.0,
+                          percent: 0.5,
+                          backgroundColor: Colors.grey,
+                          progressColor: Colors.green,
+                        ),
+                      ],
+                    ),
+                  ) ,
+
+
+
+                ],
+              ),
+            ],
+          )
+        ) ;
+
+  }
+  Widget getGameBoardHist(){
+ double size = (MediaQuery.of(context).size.width-100)/2 ;
+    return
+        Container(
+          child  : Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              Text("Game Score History" , style: titleStyle,),
+
+              Container(
+                width: size*2,
+                height: size,
+                padding: EdgeInsets.symmetric(horizontal: 5),
+                child: SimpleTimeSeriesChart.withSampleData(),
+              ),
+            ],
+          )
+        ) ;
+
+  }
+
+  Widget getCard(Widget body , double height){
+    return Card(
+      margin: EdgeInsets.symmetric(horizontal: 25 , vertical: 20),
+      elevation: 8,
+      child:
+      Container(
+        width: 1e10,
+
+        height: height,
+        padding: EdgeInsets.all(20),
+        child: body
+        ,
+      )
+      ,) ;
+
+
+  }
   Widget _getHeader(){
     return Container(
-      height: headerSize,
-      child: Center(child: Text("Profile",style: TextStyle(fontSize: 30 , color: Colors.white , fontWeight: FontWeight.bold), )),
+      height: 20,
+      width: 1e5,
     );
   }
 
