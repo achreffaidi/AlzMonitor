@@ -23,8 +23,14 @@ class _TipCatergoryState extends State<TipCatergory> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.transparent,
       body: Container(
-        color: c1,
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("assets/profilebackground.png"),
+            fit: BoxFit.cover,
+          ),
+        ),
         child:  Column(
           children: <Widget>[
             _getHeader(),
@@ -37,40 +43,32 @@ class _TipCatergoryState extends State<TipCatergory> {
 
   Widget _getBody() {
     return Container(
-      decoration: new BoxDecoration(
-        color: Colors.white,
-        borderRadius: new BorderRadius.only(
-            topLeft:   Radius.circular(70.0)
 
-        )
-        ,
-        boxShadow: [
-          new BoxShadow(
-            color: Colors.grey,
-            blurRadius: 5,
-            spreadRadius:0.2,
-            offset: new Offset(-3, -2.0),
-          )
-        ],),
       child: Container(
-          height: MediaQuery.of(context).size.height-headerSize,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-
-              getList(),
-
-
-
-            ],)
+          height: MediaQuery.of(context).size.height-headerSize - 100,
+          child: getList(),
       ),
     );
   }
 
   Widget _getHeader(){
-    return Container(
-      height: headerSize,
-      child: Center(child: Text("Tips Category",style: TextStyle(fontSize: 30 , color: Colors.white , fontWeight: FontWeight.bold), )),
+    return Column(
+      children: <Widget>[
+        AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back,color: Colors.white,),
+            onPressed: (){
+              Navigator.pop(context);
+            },),
+        ),
+        Container(
+          margin: EdgeInsets.only(top: 0),
+          height: headerSize,
+          child: Center(child: Text(tiplist.title,style: TextStyle(fontSize: 40 , color: Colors.white , fontWeight: FontWeight.w300), textAlign: TextAlign.center,)),
+        ),
+      ],
     );
   }
 
@@ -80,7 +78,7 @@ class _TipCatergoryState extends State<TipCatergory> {
     return
       Container(
 
-        height: MediaQuery.of(context).size.height - headerSize,
+        height: MediaQuery.of(context).size.height - headerSize ,
         margin: EdgeInsets.only(left: 10 ),
         child  :
         new ListView.builder
@@ -103,20 +101,18 @@ class _TipCatergoryState extends State<TipCatergory> {
       margin: EdgeInsets.symmetric(horizontal: 10 , vertical: 10),
       decoration: new BoxDecoration(
         color: Colors.white,
-        borderRadius: new BorderRadius.only(
-            topLeft:   Radius.circular(50.0),
-            topRight:   Radius.circular(50.0),
-            bottomLeft:   Radius.circular(50.0),
-            bottomRight:   Radius.circular(50.0)
+        borderRadius: new BorderRadius.all(
+               Radius.circular(20.0),
+
 
         )
         ,
         boxShadow: [
           new BoxShadow(
             color: Colors.grey,
-            blurRadius: 5,
+            blurRadius: 2,
             spreadRadius:0.2,
-            offset: new Offset(-3, -2.0),
+            offset: new Offset(0, 0),
           )
         ],),
       child: Container(
@@ -141,22 +137,22 @@ class _TipCatergoryState extends State<TipCatergory> {
                     // Colors are easy thanks to Flutter's Colors class.
 
                     Color.lerp(c1, Colors.white, 0.0),
-                    Color.lerp(c1, Colors.white, 0.5),
-                    Color.lerp(c1, Colors.white, 0.7),
-                    Color.lerp(c1, Colors.white, 0.9),
+                    Color.lerp(c1, Colors.white, 0.3),
+                    Color.lerp(c1, Colors.white, 0.3),
+                    Color.lerp(c1, Colors.white, 0.3),
                   ],
                 ),
                 borderRadius: new BorderRadius.only(
-                    topLeft:   Radius.circular(50.0),
-                    topRight:   Radius.circular(50.0)
+                    topLeft:   Radius.circular(20.0),
+                    topRight:   Radius.circular(20.0)
                 )
                 ,
                 boxShadow: [
                   new BoxShadow(
                     color: Colors.grey,
-                    blurRadius: 5,
+                    blurRadius: 2,
                     spreadRadius:0.2,
-                    offset: new Offset(-3, -2.0),
+                    offset: new Offset(0, 0),
                   )
                 ],),
               child: Container(
@@ -164,7 +160,7 @@ class _TipCatergoryState extends State<TipCatergory> {
                 child: Container(
                     margin: EdgeInsets.only(top: 20),
                     child:
-                    Text(item.title,style: TextStyle(fontSize: 22 , color: Colors.white , fontWeight: FontWeight.bold),textAlign: TextAlign.center,)
+                    Center(child: Text(item.title,style: TextStyle(fontSize: 22 , color: Colors.white , fontWeight: FontWeight.w400),textAlign: TextAlign.center,))
 
                 ),
 

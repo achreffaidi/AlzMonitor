@@ -87,21 +87,23 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
 
-    TextStyle textStyle = new TextStyle(color: Colors.white , fontWeight: FontWeight.bold , fontSize: 30) ;
+    TextStyle textStyle = new TextStyle(color: Colors.white ,fontWeight: FontWeight.w300  , fontSize: 30) ;
     _drawerController = KFDrawerController(
       initialPage: SubMain(),
 
       items: [
         KFDrawerItem.initWithPage(
-          text: Text('Profile', style: textStyle),
-          icon: Icon(Icons.home, color: Colors.white),
-          page: ProfileUI(),
-        ),
-        KFDrawerItem.initWithPage(
-          text: Text('Patient', style: textStyle),
+          text: Text('Home', style: textStyle),
           icon: Icon(Icons.home, color: Colors.white),
           page: SubMain(),
         ),
+        KFDrawerItem.initWithPage(
+          text: Text('Profile', style: textStyle),
+          icon: Icon(Icons.supervised_user_circle, color: Colors.white),
+          page: ProfileUI(),
+        ),
+
+
         KFDrawerItem.initWithPage(
           text: Text(
             'Face Recognition',
@@ -110,12 +112,31 @@ class _MyHomePageState extends State<MyHomePage> {
           icon: Icon(Icons.cloud_upload, color: Colors.white),
           page: ExtandBrain(),
         ),
+
+        KFDrawerItem(
+          text: Center(
+            child: Container(
+                margin: EdgeInsets.only(top : 0),
+                height: 100,
+                width: 220,
+                child: FlareActor("assets/heartbeat.flr", alignment:Alignment.center, fit:BoxFit.fill, animation:"Untitled")),
+          )
+        ),
+
         KFDrawerItem.initWithPage(
           text: Text(
             'SETTINGS',
             style: textStyle,
           ),
           icon: Icon(Icons.settings, color: Colors.white),
+          page: Settings(),
+        ),
+        KFDrawerItem.initWithPage(
+          text: Text(
+            'GET HELP',
+            style: textStyle,
+          ),
+          icon: Icon(Icons.help, color: Colors.white),
           page: Settings(),
         ),
         KFDrawerItem.initWithPage(
@@ -130,6 +151,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    
     return Scaffold(
       body: KFDrawer(
         controller: _drawerController,
@@ -140,16 +162,26 @@ class _MyHomePageState extends State<MyHomePage> {
             padding: EdgeInsets.symmetric(horizontal: 16.0),
             width: MediaQuery.of(context).size.width * 0.6,
             child: Container(
-              margin: EdgeInsets.only(top : 30),
-                height: 150,
-                width: 150,
-                child: FlareActor("assets/heartbeat.flr", alignment:Alignment.center, fit:BoxFit.contain, animation:"Untitled")),
+              padding: EdgeInsets.only(top: 40 , bottom: 50),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Container(height: 70 ,width: 70,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    image: DecorationImage(image: Image.network("https://s.marketwatch.com/public/resources/images/MW-GG584_elonmu_ZH_20180401183848.jpg").image ,fit: BoxFit.cover)
+                  ),) ,
+                  Container( padding: EdgeInsets.only(left: 60), child: Text("Elon Musk" ,style: TextStyle(color: Colors.white ,fontWeight: FontWeight.w300 , fontSize: 30),),)
+                ],
+              ),
+            ),
           ),
         ),
         footer: KFDrawerItem(
+
           text: Text(
-            'SIGN IN',
-            style: TextStyle(color: Colors.white),
+            'Logout',
+            style: TextStyle(color: Colors.white , fontWeight: FontWeight.w300 , fontSize: 20 ),
           ),
           icon: Icon(
             Icons.input,

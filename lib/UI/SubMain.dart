@@ -13,13 +13,15 @@ class SubMain extends KFDrawerContent {
 }
 
 class _SubMainState extends State<SubMain> {
-  int _currentIndex = 1;
+  int _currentIndex = 0;
   PageController _pageController;
 
   @override
   void initState() {
     super.initState();
     _pageController = PageController();
+
+
   }
 
   @override
@@ -55,13 +57,15 @@ class _SubMainState extends State<SubMain> {
               child: SizedBox.expand(
 
                 child: PageView(
+
                   controller: _pageController,
+
                   onPageChanged: (index) {
                     setState(() => _currentIndex = index);
                   },
                   children: <Widget>[
                     TasksUI(),
-                    User(),
+                    Dashboard(),
                   MapUI(),
 
 
@@ -73,6 +77,8 @@ class _SubMainState extends State<SubMain> {
         ),
       ),
       bottomNavigationBar: BottomNavyBar(
+
+        showElevation: true,
         selectedIndex: _currentIndex,
         onItemSelected: (index) {
           setState(() => _currentIndex = index);

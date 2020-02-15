@@ -1,6 +1,8 @@
 import 'package:carousel_pro/carousel_pro.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_fluid_slider/flutter_fluid_slider.dart';
 import 'package:google_map_location_picker/google_map_location_picker.dart';
+import 'package:monitor/Api/Tips.dart';
 import 'package:monitor/Api/location.dart';
 import 'package:monitor/Api/memories.dart';
 import 'package:monitor/Constant/Strings.dart';
@@ -11,10 +13,12 @@ import 'package:flutter_map_marker_cluster/flutter_map_marker_cluster.dart';
 import 'package:latlong/latlong.dart';
 import 'package:monitor/Game/DoubleChoiceGame/DoubleChoiceGame.dart';
 import 'package:monitor/UI/ExtandBrain/ExtandBrain.dart';
+import 'package:monitor/UI/Memories/MemoriesSettings.dart';
 import 'package:monitor/UI/Memories/MemoryDetails.dart';
 import 'package:monitor/UI/Memories/addMemories.dart';
 import 'package:http/http.dart' as http;
 import 'package:monitor/UI/Settings/Settings.dart';
+import 'package:monitor/UI/Tips/TipCategory.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 
@@ -24,24 +28,30 @@ import 'LocationPicker.dart';
 import 'MapSettingsPopUp.dart';
 
 
-class User extends StatefulWidget {
+class Dashboard extends StatefulWidget {
 
 
   @override
-  _UserState createState() => _UserState();
+  _DashboardState createState() => _DashboardState();
 }
 
-class _UserState extends State<User> {
+class _DashboardState extends State<Dashboard> {
   double headerSize = 100 ;
-  List<ImageProvider> images = new List();
-  Memories memories ;
+
 
   bool mapIsReady = false ;
   @override
+  void initState() {
+    loadTips();
+
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.transparent,
       body: Container(
-        color: c1,
         child:  Column(
           children: <Widget>[
             _getHeader(),
@@ -55,20 +65,7 @@ class _UserState extends State<User> {
   Widget _getBody() {
     return Container(
       height: MediaQuery.of(context).size.height-headerSize-56,
-      decoration: new BoxDecoration(
-        color: Colors.white,
-        borderRadius: new BorderRadius.only(
 
-        )
-        ,
-        boxShadow: [
-          new BoxShadow(
-            color: Colors.grey,
-            blurRadius: 5,
-            spreadRadius:0.2,
-            offset: new Offset(-3, -2.0),
-          )
-        ],),
       child: SingleChildScrollView(
         child: Container(
           width: MediaQuery.of(context).size.width,
@@ -76,10 +73,10 @@ class _UserState extends State<User> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-getCard(getTasksBoard(), 220) ,
-getCard(getDeviceBoard(), 200) ,
-getCard(getGameBoardLast(), 200) ,
-getCard(getGameBoardHist(), 260) ,
+                getTips(),
+                getCard(getTasksBoard(), 220) ,
+
+
 
 
 
@@ -139,71 +136,6 @@ crossAxisAlignment: CrossAxisAlignment.start,
 
   var titleStyle = TextStyle(fontSize: 20 , fontWeight: FontWeight.bold , color: c1);
 
-  Widget getGameBoardLast(){
- double size = (MediaQuery.of(context).size.width-100)/2 ;
-    return
-        Container(
-          child  : Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: <Widget>[
-              Text("Last game" , style: titleStyle,) ,
-
-              Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  Container(
-                    width: size,
-
-                    child:
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: <Widget>[
-
-                        Text("52",style: TextStyle(color: Colors.blue , fontWeight: FontWeight.bold,fontSize: 50),) ,
-                        Padding(
-                          padding: const EdgeInsets.only(bottom : 8.0 , left: 8),
-                          child: Text("Game Played",style: TextStyle(color: Colors.grey ,fontSize: 18),),
-                        ) ,
-                      ],) ,
-                  ) ,
-                  Container(
-                    width: size,
-
-                    child:
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: <Widget>[
-
-                        Row(children: <Widget>[
-
-                          Container(
-                            height: size/1.8 ,
-                            width: size/1.8,
-                            child: DonutPieChart.withSampleData(),
-                          ) ,
-                          Column(
-                            children: <Widget>[
-                              Row(children: <Widget>[Icon(Icons.adjust , color: Colors.green,) , Text("Correct")],),
-                              Row(children: <Widget>[Icon(Icons.adjust , color: Colors.red,) , Text("Wrong")],),
-                            ],
-                          )
-
-                        ],)
-                      ],
-                    ),
-                  ) ,
-
-
-
-                ],
-              ),
-            ],
-          )
-        ) ;
-
-  }
   Widget getTasksBoard(){
  double size = (MediaQuery.of(context).size.width-100)/2 ;
     return
@@ -214,7 +146,7 @@ crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
-              Text("Tasks" , style: titleStyle,) ,
+              Text("Tasks of today" , style: titleStyle,) ,
 
               Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -290,28 +222,7 @@ crossAxisAlignment: CrossAxisAlignment.start,
         ) ;
 
   }
-  Widget getGameBoardHist(){
- double size = (MediaQuery.of(context).size.width-100)/2 ;
-    return
-        Container(
-          child  : Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
 
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: <Widget>[
-              Text("Game Score History" , style: titleStyle,),
-
-              Container(
-                width: size*2,
-                height: size,
-                padding: EdgeInsets.symmetric(horizontal: 5),
-                child: SimpleTimeSeriesChart.withSampleData(),
-              ),
-            ],
-          )
-        ) ;
-
-  }
 
   Widget getCard(Widget body , double height){
     return Card(
@@ -332,239 +243,125 @@ crossAxisAlignment: CrossAxisAlignment.start,
   }
   Widget _getHeader(){
     return Container(
-      height: 20,
+      height: 180,
       width: 1e5,
     );
   }
 
-  Widget getUserImage(){
-    return  Container(
-      margin: EdgeInsets.only(left: 20 ,right: 20,top: 30),
-      child: new ClipRRect(
-        borderRadius: new BorderRadius.only(
-            topLeft:   Radius.circular(80.0),
-            topRight:   Radius.circular(30.0),
-            bottomLeft:   Radius.circular(30.0),
-            bottomRight:   Radius.circular(30.0)
-
-        ),
-        child: Image.asset(
-          "assets/oldman.jpg",
-          height: 180.0,
-          width: 500.0,
-          fit: BoxFit.cover,
-        ),
-      ),
-    ) ;
-  }
-
-
-  Location location ;
-
-  Widget getLocation(){
-
-    http.get(baseUrl+"getPosition").then((http.Response response){
-
-       location = Location.fromJson(response.body) ;
-
-       mapIsReady = true ;
-       setState(() {
-
-       });
-
-    });
-  }
-  List<Marker> markers;
-
-  int pointIndex;
-  List points ;
-  @override
-  void initState() {
-
-    loadPicture();
-    getLocation() ;
-
-    super.initState();
-  }
-
-  Widget _getMap(BuildContext context) {
 
 
 
-    return new FlutterMap(
-      options: new MapOptions(
-        center: LatLng( location.latitude  ,location.longitude ),
-        zoom: 15,
-        plugins: [
-          MarkerClusterPlugin(),
-        ],
-      ),
-      layers: [
-        new TileLayerOptions(
-          urlTemplate: "https://atlas.microsoft.com/map/tile/png?api-version=1&layer=basic&style=main&tileSize=256&view=Auto&zoom={z}&x={x}&y={y}&subscription-key={subscriptionKey}",
-          additionalOptions: {
-            'subscriptionKey': 'cqq6XOiiBJVwgSUb2EfrzI3mDb63ZpKyOrX5cK2ZKJk'
-          },
-        ),
-        MarkerClusterLayerOptions(
-          showPolygon: false,
+  Tips tips ;
 
-          maxClusterRadius: 120,
-          size: Size(40, 40),
-          anchor: AnchorPos.align(AnchorAlign.center),
-          fitBoundsOptions: FitBoundsOptions(
-            padding: EdgeInsets.all(50),
-          ),
-          markers: markers,
-          polygonOptions: PolygonOptions(
+  void loadTips() async {
 
-              borderColor: Colors.blueAccent,
-              color: Colors.black12,
-              borderStrokeWidth: 3),
-          builder: (context, markers) {
-            return Icon(Icons.person,);
-          },
-        ),
-      ],
+    http.get(baseUrl+"lists").then((http.Response response){
 
-    );
-  }
-  Widget getUserDetails(){
-    return Container(
-      margin: EdgeInsets.only(top :20, right: 20,left: 20),
-      child:
-      Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: <Widget>[
-          Container(child: Text("Mr. Bean" , style: TextStyle(fontSize: 30),),) ,
-          Container(child: Text("Device: Connected 📳" , style: TextStyle(fontSize: 20),),) ,
-        ],)
-      ,);
+      tips = Tips.fromJson(response.body);
 
-  }
-
-  Widget getMap(BuildContext context){
-    points = [
-      LatLng(location.latitude , location.longitude ),
-    ];
-    pointIndex = 0;
-    markers = [
-      Marker(
-        anchorPos: AnchorPos.align(AnchorAlign.center),
-        height: 30,
-        width: 30,
-        point: points[0],
-        builder: (ctx) => Icon(Icons.pin_drop),
-      ),
-
-    ];
-    return
-      Container(
-        height: 400,
-        width: 500,
-        margin: EdgeInsets.symmetric(vertical:20 , horizontal: 20),
-        child: Card(child: _getMap(context),),
-      );
-
-  }
-
-  Widget getMemories(){
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Container(
-            margin: EdgeInsets.only(top: 40,right: 20,left: 20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                  Text("Memories" , style: TextStyle(fontSize: 30),),
-                  RaisedButton.icon( color : c1 ,  onPressed: (){
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => AddMemories()),
-                    ).then((value){
-                      loadPicture();
-                    });
-                  }, icon: Icon(Icons.add , color: Colors.white,), label: Text("Add Memory",style: TextStyle(color: Colors.white),))
-                ,
-              ],
-            ),
-          ),          getCarsoulet(),
-        ],
-      ),
-    );
-
-  }
-  Widget getMapWidget(){
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Container(
-            margin: EdgeInsets.only(top: 40,right: 20,left: 20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                  Text("Map" , style: TextStyle(fontSize: 30),),
-                  RaisedButton.icon( color : c1 ,  onPressed: (){
-                    showMapPopUp() ;
-                  }, icon: Icon(Icons.add , color: Colors.white,), label: Text("Settings",style: TextStyle(color: Colors.white),))
-                ,
-              ],
-            ),
-          ),           mapIsReady?getMap(context):Container()
-        ],
-      ),
-    );
-
-  }
-
-  void loadPicture() async {
-
-    print("loading pictures ") ;
-    await http.get(baseUrl+"memories").then((http.Response response){
-      print(response.statusCode) ;
-      memories = Memories.fromJson(response.body);
-      images = new List();
-      for(Picture picture in memories.pictures){
-        images.add(Image.network(picture.pictureUrl).image);
-      }
       setState(() {
 
       });
-    });
-  }
-  Widget getCarsoulet(){
-    return images.isEmpty?Container():Container(
-      margin: EdgeInsets.symmetric(horizontal: 20,vertical: 20),
-      height: 300,
 
-      child: Carousel(
-        dotColor: c2,
-        radius: Radius.circular(60),
-        borderRadius: true,
-        images: images,
-        onImageTap: (index){
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => MemoryDetail(memories.pictures[index])),
-          );
-        },
+    }) ;
+
+  }
+
+  Widget getTips(){
+    return tips==null? Container():
+    Container(
+      height: 320,
+      margin: EdgeInsets.only(),
+      child  :
+      new CarouselSlider.builder(
+
+        autoPlay: true,
+      autoPlayAnimationDuration: Duration(seconds: 1),
+      enableInfiniteScroll: true,
+
+      itemCount: tips.lists.length,enlargeCenterPage: true,
+    itemBuilder: (BuildContext context, int itemIndex) =>
+    Container(
+    child: getTipCategory(tips.lists[itemIndex])),
+    ),
+    );
+
+  }
+
+  Widget getTipCategory(TipsList item) {
+    return GestureDetector(
+      onTap: (){
+
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => TipCatergory(item)),
+        );
+      },
+      child: Container(
+
+        height: 220,
+        width: 350,
+        margin: EdgeInsets.symmetric(horizontal: 10 , vertical: 10),
+        decoration: new BoxDecoration(
+          color: Colors.white,
+          borderRadius: new BorderRadius.all(
+                Radius.circular(20.0),
+
+          )
+          ,
+          boxShadow: [
+            new BoxShadow(
+              color: c1,
+              blurRadius: 2,
+              spreadRadius:0.2,
+              offset: new Offset(0, 0),
+            )
+          ],),
+        child: Container(
+          child: Column(
+
+            children: <Widget>[
+
+              Container(
+
+                height: 200,
+                width: 350,
+
+                decoration: new BoxDecoration(
+                  image: DecorationImage(image: Image.network(item.link,fit: BoxFit.cover,).image,fit: BoxFit.cover),
+                  borderRadius: new BorderRadius.only(
+                      topLeft:   Radius.circular(20.0),
+                      topRight:   Radius.circular(20.0)
+                  )
+                  ,
+                  boxShadow: [
+                    new BoxShadow(
+                      color: c1 ,
+                      blurRadius: 3,
+                      spreadRadius:0.2,
+                      offset: new Offset(0, 0),
+                    )
+                  ],),
+                child: Container(
+
+                ),
+              ),
+              Container(height: 50,child: Center(child: Text(item.title,style: TextStyle(fontSize: 22 , fontWeight: FontWeight.w300),textAlign: TextAlign.center,))),
+
+            ],
+
+          ),
+
+        ),
       ),
     );
+
   }
 
-  void showMapPopUp() async {
 
-    showDialog(
-      context: context,
-      builder: (BuildContext context) =>
-          MapSettingsPopUp());
-  }
+
+
+
 
 
 }

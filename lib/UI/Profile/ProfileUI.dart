@@ -1,8 +1,12 @@
+import 'package:carousel_pro/carousel_pro.dart';
 import 'package:flutter/material.dart';
 import 'package:kf_drawer/kf_drawer.dart';
 import 'package:monitor/Api/TaskState.dart';
+import 'package:monitor/Api/memories.dart';
 import 'package:monitor/Constant/Strings.dart';
 import 'package:monitor/Constant/colors.dart';
+import 'package:monitor/UI/Memories/MemoriesSettings.dart';
+import 'package:monitor/UI/Memories/addMemories.dart';
 import 'package:monitor/UI/User/Graphs/Circuler.dart';
 import 'package:monitor/UI/User/Graphs/TimeSerie.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
@@ -17,9 +21,16 @@ class ProfileUI extends KFDrawerContent {
 class _ProfileUIState extends State<ProfileUI> {
 
 
+
+  List<ImageProvider> images = new List();
+  Memories memories ;
+
+
+
   @override
   void initState() {
     loadTaskState();
+    loadPicture() ;
     super.initState();
   }
 
@@ -56,6 +67,83 @@ class _ProfileUIState extends State<ProfileUI> {
       ),
     );
   }
+  void loadPicture() async {
+
+    print("loading pictures ") ;
+    await http.get(baseUrl+"memories").then((http.Response response){
+      print(response.statusCode) ;
+      memories = Memories.fromJson(response.body);
+      images = new List();
+      for(Picture picture in memories.pictures){
+        images.add(Image.network(picture.pictureUrl).image);
+      }
+      setState(() {
+
+      });
+    });
+  }
+  Widget getCarsoulet(){
+    return
+
+      GestureDetector(
+        onTap: (){
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => MemoriesSettings()),
+          ).then((v){
+
+            loadPicture() ;
+
+          });
+        },
+        child: images.isEmpty?Container(
+          height: 300,
+          child: Center(child : CircularProgressIndicator()),
+        ):Container(
+          margin: EdgeInsets.symmetric(horizontal: 20,vertical: 20),
+          height: 300,
+
+          child: Carousel(
+
+            dotPosition: DotPosition.bottomCenter,
+            dotColor: c1,
+            radius: Radius.circular(10),
+            borderRadius: true,
+            images: images,
+
+          ),
+        ),
+      );
+  }
+  Widget getMemories(){
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Container(
+            margin: EdgeInsets.only(top: 40,right: 20,left: 20),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Text("Memories" , style: TextStyle(fontSize: 30),),
+                RaisedButton.icon( color : c1 ,  onPressed: (){
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => AddMemories()),
+                  ).then((value){
+                    loadPicture();
+                  });
+                }, icon: Icon(Icons.add , color: Colors.white,), label: Text("Add Memory",style: TextStyle(color: Colors.white),))
+                ,
+              ],
+            ),
+          ),          getCarsoulet(),
+        ],
+      ),
+    );
+
+  }
 
   var image_size = 180.0 ;
   _getBody() {
@@ -88,7 +176,7 @@ controller: sc,
               child: Container(
                 padding: EdgeInsets.only(top: 100),
                 margin: EdgeInsets.only(top: 130),
-                height: 1400,
+                height: 1500,
 
                 decoration: new BoxDecoration(
                   color: Colors.white,
@@ -138,8 +226,10 @@ controller: sc,
                     ) ,
                   //  getCard(getTasksBoard(), 220) ,
                     SizedBox(height: 40,),
+
                     getCard(getDeviceBoard(), 200) ,
-                    getCard(getTasksBoard(), 200) ,
+
+                    getCarsouletCard(getMemoriesBoard(), 380) ,
                     getCard(getGameBoardLast(), 200) ,
                     getCard(getGameBoardHist(), 260) ,
 
@@ -236,6 +326,29 @@ controller: sc,
                   ),)
               ],
             ),
+          ],
+        )
+    );
+
+
+
+  }
+
+  Widget getMemoriesBoard(){
+
+
+    return Container(
+        child :
+        Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15.0),
+              child: Text("Memories" , style : titleStyle),
+            ),
+      getCarsoulet(),
           ],
         )
     );
@@ -432,6 +545,23 @@ controller: sc,
 
         height: height,
         padding: EdgeInsets.all(20),
+        child: body
+        ,
+      )
+      ,) ;
+
+
+  }
+
+  Widget getCarsouletCard(Widget body , double height){
+    return Card(
+      margin: EdgeInsets.symmetric(horizontal: 15 , vertical: 15),
+      elevation: 3,
+      child:
+      Container(
+        width: 1e10,
+        height: height,
+        padding: EdgeInsets.all(5),
         child: body
         ,
       )

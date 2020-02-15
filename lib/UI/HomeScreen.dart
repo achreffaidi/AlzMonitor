@@ -63,7 +63,6 @@ class _HomeScreenState extends State<HomeScreen> {
     const oneSec = const Duration(seconds:60);
     new Timer.periodic(oneSec, (Timer t) =>_loadDeviceState() );
     _loadDeviceState() ;
-    loadTips();
   }
 
   Widget _getBody() {
@@ -97,8 +96,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 Container( margin : EdgeInsets.symmetric(horizontal: 20 , vertical: 10) ,child: Text("Memory Game Score", style: TextStyle(fontSize: 40),),),
                 getChart(),
                 Container( margin : EdgeInsets.symmetric(horizontal: 20 , vertical: 10) ,child: Text("Tips", style: TextStyle(fontSize: 40),),),
-                getTips(),
-                Container(height: 100,)
+
               ],),
           )
       ),
@@ -124,7 +122,7 @@ class _HomeScreenState extends State<HomeScreen> {
       onTap: (){
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => User()),
+          MaterialPageRoute(builder: (context) => Dashboard()),
         );
       },
       child: Container(
@@ -205,113 +203,6 @@ Widget getUserDetails(){
 
 
 
-
-Widget getTips(){
-  return tips==null? Container():
-    Container(
-      height: 300,
-      margin: EdgeInsets.only(left: 10),
-      child  :
-      new ListView.builder
-        (
-          scrollDirection: Axis.horizontal,
-          itemCount: tips.lists.length , //litems.length,
-          itemBuilder: (BuildContext ctxt, int index) =>  getTipCategory(tips.lists[index])
-    ),);
-
-}
-
-
-  Tips tips ;
-
-void loadTips() async {
-
-    http.get(baseUrl+"lists").then((http.Response response){
-
-      tips = Tips.fromJson(response.body);
-
-      setState(() {
-
-      });
-
-    }) ;
-
-}
-
-
-
-  Widget getTipCategory(TipsList item) {
-    return GestureDetector(
-      onTap: (){
-
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => TipCatergory(item)),
-        );
-      },
-      child: Container(
-
-        height: 200,
-        width: 350,
-        margin: EdgeInsets.symmetric(horizontal: 10 , vertical: 10),
-        decoration: new BoxDecoration(
-          color: Colors.white,
-          borderRadius: new BorderRadius.only(
-              topLeft:   Radius.circular(70.0),
-              topRight:   Radius.circular(70.0),
-              bottomLeft:   Radius.circular(70.0),
-              bottomRight:   Radius.circular(70.0)
-
-          )
-          ,
-          boxShadow: [
-            new BoxShadow(
-              color: Colors.grey,
-              blurRadius: 5,
-              spreadRadius:0.2,
-              offset: new Offset(-3, -2.0),
-            )
-          ],),
-        child: Container(
-          child: Column(
-
-            children: <Widget>[
-
-              Container(
-
-                height: 150,
-                width: 350,
-
-                decoration: new BoxDecoration(
-                  image: DecorationImage(image: Image.network(item.link,fit: BoxFit.cover,).image,fit: BoxFit.cover),
-                  borderRadius: new BorderRadius.only(
-                      topLeft:   Radius.circular(70.0),
-                      topRight:   Radius.circular(70.0)
-                  )
-                  ,
-                  boxShadow: [
-                    new BoxShadow(
-                      color: Colors.grey,
-                      blurRadius: 5,
-                      spreadRadius:0.2,
-                      offset: new Offset(-3, -2.0),
-                    )
-                  ],),
-                child: Container(
-
-                ),
-              ),
-               Container(height: 100,child: Center(child: Text(item.title,style: TextStyle(fontSize: 25),textAlign: TextAlign.center,))),
-
-            ],
-
-          ),
-
-        ),
-      ),
-    );
-
-  }
 
 
 

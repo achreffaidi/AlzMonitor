@@ -36,12 +36,10 @@ class _MapUIState extends State<MapUI> {
   bool mapIsReady = false ;
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return Scaffold(backgroundColor: Colors.transparent,
       body: Container(
-        color: c1,
         child:  Column(
           children: <Widget>[
-            _getHeader(),
             _getBody()
           ],
         ),
@@ -52,23 +50,8 @@ class _MapUIState extends State<MapUI> {
   Widget _getBody() {
     return Container(
       height: MediaQuery.of(context).size.height-headerSize-56,
-      decoration: new BoxDecoration(
-        color: Colors.white,
-        borderRadius: new BorderRadius.only(
-            topRight:   Radius.circular(70.0)
 
-
-        )
-        ,
-        boxShadow: [
-          new BoxShadow(
-            color: Colors.grey,
-            blurRadius: 5,
-            spreadRadius:0.2,
-            offset: new Offset(-3, -2.0),
-          )
-        ],),
-      child: SingleChildScrollView(
+      child: Container(
         child: Container(
             width: MediaQuery.of(context).size.width,
 
@@ -125,7 +108,7 @@ class _MapUIState extends State<MapUI> {
     http.get(baseUrl+"getPosition").then((http.Response response){
 
       location = Location.fromJson(response.body) ;
-
+      message = location.message ;
       mapIsReady = true ;
       setState(() {
 
@@ -137,6 +120,10 @@ class _MapUIState extends State<MapUI> {
 
   int pointIndex;
   List points ;
+
+  String  message ="" ;
+
+
   @override
   void initState() {
     getLocation() ;
@@ -196,16 +183,37 @@ class _MapUIState extends State<MapUI> {
     markers = [
       Marker(
         anchorPos: AnchorPos.align(AnchorAlign.center),
-        height: 30,
-        width: 30,
+        height: 180,
+        width: 250,
         point: points[0],
-        builder: (ctx) => Icon(Icons.pin_drop),
+
+        builder: (ctx) => Column(
+
+          children: <Widget>[
+Container(
+  height: 60,
+  child: Card(child: Padding(
+    padding: const EdgeInsets.all(8.0),
+    child: Text(
+
+        (location.distanceFromSafeZone/1000).toStringAsFixed(1) +" klm \n from Safe-Zone"
+
+    ),
+  ),),
+),
+            Container(
+      height: 60
+    ,
+                child: Center(child: Icon(Icons.pin_drop , color: Colors.redAccent,size: 50,))),
+          SizedBox(height: 60,)
+          ],
+        ),
       ),
 
     ];
     return
       Container(
-        height: MediaQuery.of(context).size.height*0.7,
+        height: MediaQuery.of(context).size.height*0.65,
         width: 500,
         margin: EdgeInsets.symmetric(vertical:20 , horizontal: 20),
         child: Card(child: _getMap(context),),
@@ -216,23 +224,25 @@ class _MapUIState extends State<MapUI> {
 
   Widget getMapWidget(){
     return Container(
+      height: 850,
       margin: EdgeInsets.symmetric(vertical: 20),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          Container(
-            margin: EdgeInsets.only(top: 40,right: 20,left: 20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Text("Map" , style: TextStyle(fontSize: 30),),
-                RaisedButton.icon( color : c1 ,  onPressed: (){
-                  showMapPopUp() ;
-                }, icon: Icon(Icons.add , color: Colors.white,), label: Text("Settings",style: TextStyle(color: Colors.white),))
-                ,
-              ],
-            ),
-          ),           mapIsReady?getMap(context):Container()
+          mapIsReady?getMap(context):Container(
+            child: Card(child: Container( height: MediaQuery.of(context).size.height*0.65,
+              width: 500,child: Center(child : CircularProgressIndicator()),),),
+
+
+          ) ,
+          Text(message , textAlign: TextAlign.center,style: TextStyle(
+            fontWeight: FontWeight.w300 , fontSize: 25
+          ),) ,
+          RaisedButton.icon( color : c1 ,  onPressed: (){
+            showMapPopUp() ;
+          }, icon: Icon(Icons.settings , color: Colors.white,), label: Text("Safe-Zone settings",style: TextStyle(color: Colors.white),))
         ],
       ),
     );
