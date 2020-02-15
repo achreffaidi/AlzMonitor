@@ -11,6 +11,8 @@ import 'package:carousel_pro/carousel_pro.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
+import 'package:monitor/Api/tasksByDay.dart' as tsk;
 
 
 import 'package:charts_flutter/flutter.dart' as charts;
@@ -47,6 +49,9 @@ class _TasksUIState extends State<TasksUI> {
       ) ,
     );
   }
+
+
+/*
   Widget _getDaysList(){
     return
       tasks==null?Container():
@@ -62,7 +67,6 @@ class _TasksUIState extends State<TasksUI> {
         ),);
 
   }  Tasks tasks ;
-
 
 
   Widget getDay(List<ListByDay> item  , int day) {
@@ -99,7 +103,7 @@ class _TasksUIState extends State<TasksUI> {
               onTap: (){
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => TaskDetails(item)),
+                  MaterialPageRoute(builder: (context) => TaskDetails(_day.dw.selected)),
                 );
               },
               child: Container(
@@ -158,6 +162,8 @@ class _TasksUIState extends State<TasksUI> {
     );
 
   }
+ */
+
   Widget getOneTask(ListByDay item){
     return Card(
       child: Container(
@@ -212,7 +218,7 @@ class _TasksUIState extends State<TasksUI> {
 
 
   }
-
+/*
   String getDayName(int day){
 
     switch(day){
@@ -251,8 +257,12 @@ class _TasksUIState extends State<TasksUI> {
 
   }
 
-
+*/
   Widget _getBody() {
+    var now = new DateTime.now();
+    var formatter = new DateFormat('EEEE, d MMM y');
+    String formatted = formatter.format(now);
+
     return Container(
       height: MediaQuery.of(context).size.height-headerSize-70,
 
@@ -301,14 +311,14 @@ class _TasksUIState extends State<TasksUI> {
                       Row(
                           children: <Widget>[
                             Icon(Icons.calendar_today , color: Colors.lightBlue,) ,
-                            Text("  12 Feb 2020" , style: TextStyle(fontSize: 20 , fontWeight: FontWeight.w500 , color: Colors.blueGrey),)
+                            Text("  "+formatted , style: TextStyle(fontSize: 20 , fontWeight: FontWeight.w500 , color: Colors.blueGrey),)
                           ],
                         ),) ,
 
                         Container(
                           margin: EdgeInsets.only(top: 20),
                           child:
-                        DayWeek()
+                          DayWeek()
                           ,)
 
 
@@ -325,6 +335,7 @@ class _TasksUIState extends State<TasksUI> {
       ),
     );
   }
+
 
   Padding getTasksWidget() {
     return Padding(
@@ -362,7 +373,16 @@ mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: <Widget>[
-                          Text("Details" ,style: TextStyle(fontSize: 23 , fontWeight: FontWeight.w400, color: Colors.blueGrey), textAlign: TextAlign.right,),
+                          GestureDetector(
+                              onTap:(){
+                Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => TaskDetails(selected)),
+                ).then((value){
+                  loadTask(selected);
+                });
+                } ,
+                              child: Text("Details" ,style: TextStyle(fontSize: 23 , fontWeight: FontWeight.w400, color: Colors.blueGrey), textAlign: TextAlign.right,)),
 
 
                         ],
@@ -389,12 +409,12 @@ mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: <Widget>[
-                              Text("2/5 Done" , style: TextStyle(fontSize : 20 , color: Colors.blueGrey),)
+                              Text(done.toString()+"/"+total.toString()+" Done" , style: TextStyle(fontSize : 20 , color: Colors.blueGrey),)
                             ],
                           ),
                           LinearPercentIndicator(
                             lineHeight: 14.0,
-                            percent: 0.2,
+                            percent: (total==0)?0:done/total,
                             backgroundColor: c1,
                             progressColor: Colors.lightBlueAccent,
                           ),
@@ -431,71 +451,6 @@ mainAxisAlignment: MainAxisAlignment.spaceEvenly,
   List<bool> listExp  ;
 
 
-  Widget _buildPanel() {
-    return Container(
-        padding: EdgeInsets.all(5),
-        child: ExpansionPanelList(
-
-          expansionCallback: (int index, bool isExpanded) {
-            setState(() {
-              for(int i = 0 ;i<7  ; i++) if(i!=index)myList[i].isExpanded = false ;
-              myList[index].isExpanded = ! myList[index].isExpanded;
-            });
-          },
-          children: myList.map<ExpansionPanel>((MyExpanded item) {
-            return ExpansionPanel(
-              canTapOnHeader: true,
-              headerBuilder: (BuildContext context, bool isExpanded) {
-                return Container(
-
-                    padding: EdgeInsets.all(5), //Set Padding form here !!
-                    child: DecoratedBox(
-                        decoration: BoxDecoration(
-                          color: c1,
-
-                          borderRadius: BorderRadius.all(Radius.circular(5)),
-                        ),
-                        child: Container(
-                          height: 50,
-                            padding: EdgeInsets.only(left: 20),
-                            child: Row(
-                              children: <Widget>[
-                                Expanded(
-                                    child: Text(
-                                      "day",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.white
-                                          ,fontSize: 23
-                                      ),
-                                    )),
-                          Padding(
-                            padding: const EdgeInsets.only(right : 10.0),
-                            child: GestureDetector(
-                                onTap: (){
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(builder: (context) => TaskDetails(item.item)),
-                                  );
-                                },
-                                child: Icon(Icons.settings ,color: Colors.white,)),
-                          )
-                          //      getProgressWidget(item.list,  getColor(item.toDoC.subColor)),
-
-                              ],
-                            ))));
-              },
-              body: Container(
-                  color:
-                     c2,
-                  padding:
-                  EdgeInsets.only(left: 30, right: 30, top: 10, bottom: 10),
-                  child: getTasks(item.item ) ),
-              isExpanded: item.isExpanded,
-            );
-          }).toList(),
-        ));
-  }
 
 
 
@@ -509,18 +464,154 @@ mainAxisAlignment: MainAxisAlignment.spaceEvenly,
 List<TempTask> listTempTask ;
   @override
   void initState() {
-    loadTasks();
     listTempTask  = new List();
-    listTempTask.add(new TempTask("do This","08:45",true));
-    listTempTask.add(new TempTask("do That","09:45",true));
-    listTempTask.add(new TempTask("do Something else","10:25",false));
-    listTempTask.add(new TempTask("do Another Thing","12:45",true));
-    listTempTask.add(new TempTask("Go to Sleep","18:45",false));
+
+    names.add("Sun") ;
+    names.add("Mon") ;
+    names.add("Tue") ;
+    names.add("Wed") ;
+    names.add("Thu") ;
+    names.add("Fri") ;
+    names.add("Sat") ;
+    var now = new DateTime.now();
+    int day = now.weekday ;
+    selected = day ;
+    loadTask(selected);
+
+    DateTime ref = now.subtract(Duration(days :day)) ;
+    for(int i = 0 ; i<7 ; i++) numbers.add(ref.add(Duration(days:i)).day) ;
     super.initState();
+  }
+
+  void loadTask(int day) async {
+    print(baseUrl + "getbyday/" + day.toString());
+    http
+        .get(baseUrl + "getbyday/" + day.toString())
+        .then((http.Response response) {
+      List<tsk.ListByDay> tasks =
+          tsk.TasksByDay.fromJson(response.body).listByDay;
+      print(response.body);
+
+      listTempTask = new List() ;
+      done = 0 ;
+      total = tasks.length  ;
+      for(tsk.ListByDay t in tasks){
+        listTempTask.add(new TempTask(t.title,t.time,t.done));
+        if(t.done) done++;
+      }
+
+
+
+      setState(() {});
+    });
   }
 
 
 
+
+  List<String> names = new List() ;
+  List<int>   numbers = new List() ;
+  int selected  ;
+  int total =0 ;
+  int done  = 0 ;
+
+
+  Widget DayWeek() {
+    return Container(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: <Widget>[
+          getDay(0),
+          getDay(1),
+          getDay(2),
+          getDay(3),
+          getDay(4),
+          getDay(5),
+          getDay(6),
+        ],
+      ),
+    );
+  }
+
+  Widget getDay(int i ){
+
+    double circle = 30 ;
+
+    Widget temp ;
+    if(i == selected)
+      temp =  Container(
+          height: 80,
+          child  :
+          Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisSize: MainAxisSize.max,
+            children: <Widget>[
+
+              Container(
+                child:
+                Text(names[i] , style: TextStyle(fontWeight: FontWeight.w500),),
+              ) ,
+
+              Container(
+                width: circle,
+                height: circle,
+                child: new Container(
+                  child: Center(
+                    child: Text(numbers[i].toString() ,style: TextStyle(fontSize:15 , color: Colors.white), ),
+                  ),
+                  decoration: new BoxDecoration(
+
+                    gradient: new LinearGradient(
+                        colors: [c1, Colors.cyan],
+                        begin: Alignment.centerRight,
+                        end: new Alignment(-1.0, -1.0)
+                    ),
+
+                    shape: BoxShape.circle,
+
+                  ),
+                ),
+              ),
+            ],
+          )
+      );
+
+    else temp =  Container(
+        height: 80,
+        child  :
+        Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          mainAxisSize: MainAxisSize.max,
+          children: <Widget>[
+
+            Container(
+              child:
+              Text(names[i] , style: TextStyle(fontWeight: FontWeight.w300),),
+            ) ,
+
+            Container(
+              width: circle,
+              height: circle,
+              child: new Container(
+                child: Center(
+                  child: Text(numbers[i].toString() ,style: TextStyle(fontSize:15 , color: Colors.blueGrey), ),
+                ),
+
+              ),
+            ),
+          ],
+        )
+    );
+    return GestureDetector(child: Container(
+        width: 60,
+        child: temp) , onTap: (){
+      selected = i ;
+      setState(() {
+loadTask(selected);
+      });
+    }, ) ;
+
+  }
 
 
 
@@ -591,128 +682,12 @@ class TempTask{
 
 }
 
-class DayWeek extends StatefulWidget {
-  @override
-  _DayWeekState createState() => _DayWeekState();
-}
-
-class _DayWeekState extends State<DayWeek> {
-
-  List<String> names = new List() ;
-  List<int>   numbers = new List() ;
-  int selected  ;
-
-  @override
-  void initState() {
-    selected = 0 ;
-    names.add("Sun") ;
-    names.add("Mon") ;
-    names.add("Tue") ;
-    names.add("Wed") ;
-    names.add("Thu") ;
-    names.add("Fri") ;
-    names.add("Sat") ;
-    for(int i = 3 ; i<=9 ; i++) numbers.add(i) ;
-    super.initState();
-  }
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: <Widget>[
-          getDay(0),
-          getDay(1),
-          getDay(2),
-          getDay(3),
-          getDay(4),
-          getDay(5),
-          getDay(6),
-        ],
-      ),
-    );
-  }
-
-  Widget getDay(int i ){
-
-    double circle = 30 ;
-
-    Widget temp ;
-    if(i == selected)
-      temp =  Container(
-        height: 80,
-          child  :
-          Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            mainAxisSize: MainAxisSize.max,
-            children: <Widget>[
-
-              Container(
-                child:
-                Text(names[i] , style: TextStyle(fontWeight: FontWeight.w500),),
-              ) ,
-
-              Container(
-                width: circle,
-                height: circle,
-                child: new Container(
-                  child: Center(
-                    child: Text(numbers[i].toString() ,style: TextStyle(fontSize:15 , color: Colors.white), ),
-                  ),
-                  decoration: new BoxDecoration(
-
-                    gradient: new LinearGradient(
-                        colors: [c1, Colors.cyan],
-                        begin: Alignment.centerRight,
-                        end: new Alignment(-1.0, -1.0)
-                    ),
-
-                    shape: BoxShape.circle,
-
-                  ),
-                ),
-              ),
-            ],
-          )
-      );
-
-    else temp =  Container(
-        height: 80,
-        child  :
-        Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          mainAxisSize: MainAxisSize.max,
-          children: <Widget>[
-
-            Container(
-              child:
-              Text(names[i] , style: TextStyle(fontWeight: FontWeight.w300),),
-            ) ,
-
-            Container(
-              width: circle,
-              height: circle,
-              child: new Container(
-                child: Center(
-                  child: Text(numbers[i].toString() ,style: TextStyle(fontSize:15 , color: Colors.blueGrey), ),
-                ),
-
-              ),
-            ),
-          ],
-        )
-    );
-    return GestureDetector(child: Container(
-        width: 60,
-        child: temp) , onTap: (){
-      selected = i ;
-setState(() {
-
-});
-    }, ) ;
-
-  }
 
 
-}
+
+
+
+
+
+
 

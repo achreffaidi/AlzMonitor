@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:kf_drawer/kf_drawer.dart';
+import 'package:monitor/Api/TaskState.dart';
+import 'package:monitor/Constant/Strings.dart';
 import 'package:monitor/Constant/colors.dart';
 import 'package:monitor/UI/User/Graphs/Circuler.dart';
 import 'package:monitor/UI/User/Graphs/TimeSerie.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
+import 'package:http/http.dart' as http;
 
 class ProfileUI extends KFDrawerContent {
   @override
@@ -12,6 +15,14 @@ class ProfileUI extends KFDrawerContent {
 }
 
 class _ProfileUIState extends State<ProfileUI> {
+
+
+  @override
+  void initState() {
+    loadTaskState();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context){
     return Scaffold(
@@ -128,6 +139,7 @@ controller: sc,
                   //  getCard(getTasksBoard(), 220) ,
                     SizedBox(height: 40,),
                     getCard(getDeviceBoard(), 200) ,
+                    getCard(getTasksBoard(), 200) ,
                     getCard(getGameBoardLast(), 200) ,
                     getCard(getGameBoardHist(), 260) ,
 
@@ -305,7 +317,7 @@ controller: sc,
     return
       Container(
 
-          child  : Column(
+          child  :(taskState==null)?CircularProgressIndicator() :  Column(
             crossAxisAlignment: CrossAxisAlignment.start,
 
             mainAxisSize: MainAxisSize.max,
@@ -324,7 +336,7 @@ controller: sc,
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: <Widget>[
                         Icon(Icons.check_box ,color: Colors.green,size: 50,) ,
-                        Text("3/7",style: TextStyle(color: Colors.blue , fontWeight: FontWeight.bold,fontSize: 50),) ,
+                        Text( taskState.tasksStat.allTasks.done.toString()+"/"+taskState.tasksStat.allTasks.all.toString(),style: TextStyle(color: Colors.blue , fontWeight: FontWeight.bold,fontSize: 50),) ,
                         Padding(
                           padding: const EdgeInsets.only(bottom : 8.0 , left: 0),
                           child: Text("Done",style: TextStyle(color: Colors.grey ,fontSize: 18),),
@@ -348,7 +360,7 @@ controller: sc,
                         LinearPercentIndicator(
                           width: 140.0,
                           lineHeight: 14.0,
-                          percent: 0.8,
+                          percent: taskState.tasksStat.priority2.all==0?1:taskState.tasksStat.priority2.done/taskState.tasksStat.priority2.all,
                           backgroundColor: Colors.grey,
                           progressColor: Colors.red,
                         ),
@@ -359,7 +371,7 @@ controller: sc,
                         LinearPercentIndicator(
                           width: 140.0,
                           lineHeight: 14.0,
-                          percent: 0.2,
+                          percent: taskState.tasksStat.priority1.all==0?1:taskState.tasksStat.priority1.done/taskState.tasksStat.priority1.all,
                           backgroundColor: Colors.grey,
                           progressColor: Colors.orange,
                         ),
@@ -370,7 +382,7 @@ controller: sc,
                         LinearPercentIndicator(
                           width: 140.0,
                           lineHeight: 14.0,
-                          percent: 0.5,
+                          percent: taskState.tasksStat.priority0.all==0?1:taskState.tasksStat.priority0.done/taskState.tasksStat.priority0.all,
                           backgroundColor: Colors.grey,
                           progressColor: Colors.green,
                         ),
@@ -424,6 +436,26 @@ controller: sc,
         ,
       )
       ,) ;
+
+
+  }
+  TaskState taskState ;
+  void loadTaskState(){
+
+    http.get(baseUrl+"tasks/statByDay/"+DateTime.now().weekday.toString()).then((http.Response response){
+
+      if(response.statusCode==200){
+
+        taskState = TaskState.fromJson(response.body);
+        setState(() {
+
+        });
+
+
+
+      }
+
+    });
 
 
   }

@@ -71,6 +71,8 @@ flutter:
     - assets/oldman.jpg
     - assets/userImage.jpg
     - assets/profilebackground.png
+    - assets/addtaskbackground.png
+    - assets/taskmanagerbackground.png
     - assets/homebackground.png
     - assets/heartbeat.flr
 
