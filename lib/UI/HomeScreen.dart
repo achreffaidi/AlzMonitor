@@ -13,12 +13,12 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 import 'Contact/ContactUI.dart';
+import 'Dashboard/Dashboard.dart';
 import 'Emergency/Emergency.dart';
 import 'Memories/MemoryDetails.dart';
 import 'Storage/Storage.dart';
 import 'Tasks/TaskDetails.dart';
 import 'Tips/TipCategory.dart';
-import 'User/User.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 
 class HomeScreen extends KFDrawerContent  {

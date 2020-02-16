@@ -4,6 +4,7 @@ import 'package:flare_flutter/flare_actor.dart';
 import 'package:flare_splash_screen/flare_splash_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
+import 'package:get_it/get_it.dart';
 import 'package:kf_drawer/kf_drawer.dart';
 import 'package:monitor/tools/CameraController.dart';
 import 'package:monitor/tools/Images.dart';
@@ -17,9 +18,19 @@ import 'UI/HomeScreen.dart';
 import 'UI/Profile/ProfileUI.dart';
 import 'UI/Settings/Settings.dart';
 import 'UI/SubMain.dart';
-import 'UI/User/User.dart';
+import 'UI/Dashboard/Dashboard.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  setupLocator();
+  runApp(MyApp());
+}
+
+
+GetIt locator = GetIt();
+
+void setupLocator() {
+  locator.registerSingleton(CallsAndMessagesService());
+}
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -113,15 +124,7 @@ class _MyHomePageState extends State<MyHomePage> {
           page: ExtandBrain(),
         ),
 
-        KFDrawerItem(
-          text: Center(
-            child: Container(
-                margin: EdgeInsets.only(top : 0),
-                height: 100,
-                width: 220,
-                child: FlareActor("assets/heartbeat.flr", alignment:Alignment.center, fit:BoxFit.fill, animation:"Untitled")),
-          )
-        ),
+
 
         KFDrawerItem.initWithPage(
           text: Text(
@@ -138,6 +141,15 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           icon: Icon(Icons.help, color: Colors.white),
           page: Settings(),
+        ),
+        KFDrawerItem(
+            text: Center(
+              child: Container(
+                  margin: EdgeInsets.only(top : 30),
+                  height: 100,
+                  width: 220,
+                  child: FlareActor("assets/heartbeat.flr", alignment:Alignment.center, fit:BoxFit.fill, animation:"Untitled")),
+            )
         ),
         KFDrawerItem.initWithPage(
           text: Container(height: 300,),

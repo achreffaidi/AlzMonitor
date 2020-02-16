@@ -474,11 +474,13 @@ List<TempTask> listTempTask ;
     names.add("Fri") ;
     names.add("Sat") ;
     var now = new DateTime.now();
-    int day = now.weekday ;
+    int day = now.weekday % 7 ;
     selected = day ;
     loadTask(selected);
 
     DateTime ref = now.subtract(Duration(days :day)) ;
+    print(day) ;
+    print(ref.day);
     for(int i = 0 ; i<7 ; i++) numbers.add(ref.add(Duration(days:i)).day) ;
     super.initState();
   }

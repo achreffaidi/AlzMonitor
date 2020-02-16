@@ -5,7 +5,7 @@ import 'package:monitor/Constant/colors.dart';
 
 import 'Map/MapUI.dart';
 import 'Tasks/tasksUI.dart';
-import 'User/User.dart';
+import 'Dashboard/Dashboard.dart';
 
 class SubMain extends KFDrawerContent {
   @override

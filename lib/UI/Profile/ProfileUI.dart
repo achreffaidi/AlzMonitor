@@ -7,8 +7,8 @@ import 'package:monitor/Constant/Strings.dart';
 import 'package:monitor/Constant/colors.dart';
 import 'package:monitor/UI/Memories/MemoriesSettings.dart';
 import 'package:monitor/UI/Memories/addMemories.dart';
-import 'package:monitor/UI/User/Graphs/Circuler.dart';
-import 'package:monitor/UI/User/Graphs/TimeSerie.dart';
+import 'package:monitor/UI/Dashboard/Graphs/Circuler.dart';
+import 'package:monitor/UI/Dashboard/Graphs/TimeSerie.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:http/http.dart' as http;
@@ -239,7 +239,7 @@ controller: sc,
                 ),
               ),
             ),
-            Positioned(
+         /*   Positioned(
               top: 130,
               right: 20,
               child: Container(
@@ -258,7 +258,7 @@ controller: sc,
                 child:
                 Center(child: Container(child: Icon(Icons.phone , color: Colors.white , size: 35,),)),
               ),
-            ),
+            ),*/
             _getProfilePicture(),
 
           ],

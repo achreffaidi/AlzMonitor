@@ -21,7 +21,9 @@ import 'package:monitor/UI/Settings/Settings.dart';
 import 'package:monitor/UI/Tips/TipCategory.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
+import 'package:url_launcher/url_launcher.dart';
 
+import '../../main.dart';
 import 'Graphs/Circuler.dart';
 import 'Graphs/TimeSerie.dart';
 import 'LocationPicker.dart';
@@ -38,12 +40,13 @@ class Dashboard extends StatefulWidget {
 class _DashboardState extends State<Dashboard> {
   double headerSize = 100 ;
 
-
+  List<Emergency> emrs ;
   bool mapIsReady = false ;
   @override
   void initState() {
     loadTips();
-
+    Emergency x = Emergency.fromSimple();
+    emrs = [x,x,x,x,x,];
     super.initState();
   }
 
@@ -68,13 +71,16 @@ class _DashboardState extends State<Dashboard> {
 
       child: SingleChildScrollView(
         child: Container(
+
           width: MediaQuery.of(context).size.width,
 
             child: Column(
+
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 getTips(),
                 getCard(getTasksBoard(), 220) ,
+                getCard(getEmergencyNumbersBoard(), 300) ,
 
 
 
@@ -88,50 +94,7 @@ class _DashboardState extends State<Dashboard> {
   }
 
 
-  Widget getDeviceBoard(){
 
-    double size = (MediaQuery.of(context).size.width-100)/2 ;
-
-    return Container(
-      child :
-        Column(
-  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-
-           Text("Device State " , style : titleStyle),
-            Row(
-              children: <Widget>[
-                Container(
-                  width: size,
-                  child:
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      Text("Last Seen : 2 hours") ,
-                      Text("Position : In the Safe Zone") ,
-                    ],
-                  ),
-                ) ,
-                Container(
-                  width: size,
-                  child : new CircularPercentIndicator(
-                  radius  : size*0.6,
-                  lineWidth: 14.0,
-                  percent: 0.60,
-                  center: new Icon(Icons.battery_charging_full , size: 50,),
-                  progressColor: Colors.yellow,
-                ),)
-              ],
-            ),
-          ],
-        )
-    );
-
-
-
-  }
 
 
   var titleStyle = TextStyle(fontSize: 20 , fontWeight: FontWeight.bold , color: c1);
@@ -185,7 +148,7 @@ crossAxisAlignment: CrossAxisAlignment.start,
                           lineHeight: 14.0,
                           percent: 0.8,
                           backgroundColor: Colors.grey,
-                          progressColor: Colors.red,
+                          progressColor: Color.lerp(c1, Colors.white, 0.1),
                         ),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
@@ -196,7 +159,7 @@ crossAxisAlignment: CrossAxisAlignment.start,
                           lineHeight: 14.0,
                           percent: 0.2,
                           backgroundColor: Colors.grey,
-                          progressColor: Colors.orange,
+                          progressColor: Color.lerp(c1, Colors.white, 0.3),
                         ),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
@@ -207,7 +170,7 @@ crossAxisAlignment: CrossAxisAlignment.start,
                           lineHeight: 14.0,
                           percent: 0.5,
                           backgroundColor: Colors.grey,
-                          progressColor: Colors.green,
+                          progressColor: Color.lerp(c1, Colors.white, 0.5),
                         ),
                       ],
                     ),
@@ -222,6 +185,43 @@ crossAxisAlignment: CrossAxisAlignment.start,
         ) ;
 
   }
+
+  Widget getEmergencyNumbersBoard(){
+
+    return
+      Container(
+          child  : Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              Text("Emergecy Numbers" , style: titleStyle,) ,
+
+             Container(
+                 height: 240,
+                 child   : GridView.builder(
+                     physics: const NeverScrollableScrollPhysics() ,
+                 itemCount: emrs.length,
+
+                 gridDelegate:
+                 new SliverGridDelegateWithFixedCrossAxisCount(
+
+               childAspectRatio: 1.4,
+
+                     mainAxisSpacing: 8,
+                     crossAxisSpacing: 2,
+
+                     crossAxisCount: 3),
+                 itemBuilder: (BuildContext context, int index) {
+                   return emrs[index].getWidget();
+                 })),
+            ],
+          )
+      ) ;
+
+  }
+
 
 
   Widget getCard(Widget body , double height){
@@ -243,7 +243,7 @@ crossAxisAlignment: CrossAxisAlignment.start,
   }
   Widget _getHeader(){
     return Container(
-      height: 180,
+      height: 0,
       width: 1e5,
     );
   }
@@ -358,10 +358,51 @@ crossAxisAlignment: CrossAxisAlignment.start,
 
   }
 
+}
+
+class Emergency{
+
+  String name  ;
+  String number ;
+  IconData icon ;
+  Color color ;
+
+  final CallsAndMessagesService _service = locator<CallsAndMessagesService>();
+   Emergency.fromSimple(){
+     name = "test" ; 
+     number ="123456789"; 
+     icon = Icons.directions_car ;
+     color = Colors.red ;
+  }
+
+  Emergency(this.name, this.number, this.icon, this.color);
 
 
+   Widget getWidget(){
+     return GestureDetector(
+       onTap: (){
+         _service.call(number);
+       },
+       child: Card(
+         color: color,
+         child : Container(
+           child: Column(
+             children : <Widget>[
+               Icon(icon ,size: 60,color: Colors.white,) ,
+               Text(name , style: TextStyle(fontSize: 22,fontWeight: FontWeight.w400 , color: Colors.white))
+             ]
+           ),
+         )
+       ),
+     );
+
+   }
 
 
+}
 
-
+class CallsAndMessagesService {
+  void call(String number) => launch("tel:$number");
+  void sendSms(String number) => launch("sms:$number");
+  void sendEmail(String email) => launch("mailto:$email");
 }

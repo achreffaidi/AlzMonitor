@@ -19,7 +19,7 @@ import 'package:monitor/UI/Memories/MemoryDetails.dart';
 import 'package:monitor/UI/Memories/addMemories.dart';
 import 'package:http/http.dart' as http;
 import 'package:monitor/UI/Settings/Settings.dart';
-import 'package:monitor/UI/User/MapSettingsPopUp.dart';
+import 'package:monitor/UI/Dashboard/MapSettingsPopUp.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 
