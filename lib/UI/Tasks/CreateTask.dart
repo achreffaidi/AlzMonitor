@@ -493,7 +493,7 @@ class _CreateTaskState extends State<CreateTask> {
 }
 
 class Categories{
-  List<String> names = ["Cat1","Cat2","Cat3","Cat4"];
+  List<String> names = ["Basic","Food","Health","Activity"];
   int selected = 0 ;
 
   Widget getCategoryItem(int i){
@@ -504,7 +504,7 @@ class Categories{
         width: 150,
         decoration: new BoxDecoration(
           gradient: new LinearGradient(
-              colors: [Colors.cyanAccent, Colors.cyanAccent],
+              colors: [Colors.indigoAccent, Colors.cyanAccent],
               begin: Alignment.centerRight,
               end: new Alignment(-1.0, -1.0)
           ),

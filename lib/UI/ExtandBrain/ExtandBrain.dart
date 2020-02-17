@@ -1,3 +1,5 @@
+import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -21,10 +23,11 @@ class ExtandBrain extends KFDrawerContent {
 
 class _ExtandBrainState extends State<ExtandBrain>
     with SingleTickerProviderStateMixin {
+
+
   Map<String, String> headers;
   TextEditingController _name = new TextEditingController();
   TextEditingController _data = new TextEditingController();
-  Person _currentCity;
   double headerSize = 100;
   File _image;
   String preview_path = "";
@@ -32,6 +35,9 @@ class _ExtandBrainState extends State<ExtandBrain>
 
   AnimationController _animationController;
   Animation<double> _curvedAnimation;
+
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -163,6 +169,7 @@ class _ExtandBrainState extends State<ExtandBrain>
                   ) ,
 
                   RaisedButton.icon(onPressed: (){
+
                     _step = 1 ;
                     setState(() {
 
@@ -287,10 +294,8 @@ class _ExtandBrainState extends State<ExtandBrain>
                               color: Colors.redAccent,
                             ),
                             RaisedButton.icon(onPressed: (){
-                              _step++ ;
-                              setState(() {
-
-                              });
+                              if(_name.text.toString().isNotEmpty&& _data.text.toString().isNotEmpty)
+                              addPersonName(_name.text.toString(), _data.text.toString());
                             },
                               icon :Icon(Icons.navigate_next,color: Colors.white,size: 20,),
                               label: Text("Next",style: TextStyle(color: Colors.white , fontSize: 20),) ,
@@ -371,11 +376,15 @@ class _ExtandBrainState extends State<ExtandBrain>
                               label: Text("Cancel",style: TextStyle(color: Colors.white , fontSize: 20),) ,
                               color: Colors.redAccent,
                             ),
-                            RaisedButton.icon(onPressed: (){
-                              _step++ ;
-                              setState(() {
+                            RaisedButton.icon(
 
-                              });
+                              onPressed: (_image==null)? null:(){
+                              if(_step==2){
+                                uploadImage1();
+                              }else if(_step==2){
+                                uploadImage2();
+                              }else
+                                uploadImage3() ;
                             },
                               icon :Icon(Icons.navigate_next,color: Colors.white,size: 20,),
                               label: Text("Next",style: TextStyle(color: Colors.white , fontSize: 20),) ,
@@ -411,8 +420,7 @@ class _ExtandBrainState extends State<ExtandBrain>
                 ),
 
                 RaisedButton.icon(onPressed: (){
-                  _step = 1 ;
-                  _flip(false);
+                  addPerson();
                 },
                   icon :Icon(Icons.done,color: Colors.white,size: 30,),
                   label: Text("Finish",style: TextStyle(color: Colors.white , fontSize: 30),) ,
@@ -434,48 +442,9 @@ class _ExtandBrainState extends State<ExtandBrain>
     super.dispose();
   }
 
-  Widget _getSelect() {
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 20, vertical: 30),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          Container(
-            child: Text(
-              "Select a Person",
-              style: TextStyle(fontSize: 20),
-            ),
-          ),
-          Container(
-            margin: EdgeInsets.all(5),
-            child: new DropdownButton(
-              value: _currentCity,
-              items: _dropDownMenuItems,
-              onChanged: changedDropDownItem,
-            ),
-          ),
-          IconButton(
-            icon: Icon(Icons.add_circle),
-            onPressed: showPopUp,
-          )
-        ],
-      ),
-    );
-  }
 
-  List<DropdownMenuItem<Person>> _dropDownMenuItems;
-  List<DropdownMenuItem<Person>> getDropDownMenuItems() {
-    List<DropdownMenuItem<Person>> items = new List();
-    if (persons != null && persons.isNotEmpty)
-      for (Person person in persons) {
-        // here we are creating the drop down menu items, you can customize the item right here
-        // but I'll just use a simple text for this
-        items.add(new DropdownMenuItem(
-            value: person,
-            child: Container(width: 150, child: new Text(person.name))));
-      }
-    return items;
-  }
+
+
 
   @override
   void initState() {
@@ -488,21 +457,16 @@ class _ExtandBrainState extends State<ExtandBrain>
         CurvedAnimation(parent: _animationController, curve: Curves.easeInOut);
   }
 
-  void changedDropDownItem(Person selectedCity) {
-    print("Selected city $selectedCity, we are going to refresh the UI");
-    setState(() {
-      _currentCity = selectedCity;
-    });
-  }
+
 
   List<Person> persons;
   void loadNames() {
     print(baseUrl + "persons");
     http.get(baseUrl + "persons").then((http.Response response) {
       persons = AddPerson.fromJson(response.body).persons;
+      print(response.body);
       setState(() {
-        _dropDownMenuItems = getDropDownMenuItems();
-        _currentCity = _dropDownMenuItems[0].value;
+
       });
     });
   }
@@ -589,7 +553,6 @@ class _ExtandBrainState extends State<ExtandBrain>
   }
 
   Future getImageFromCamera() async {
-    print('i am here ');
     var image = await ImagePicker.pickImage(source: ImageSource.camera);
 
     await Images(image).CompressAndGetFile().then((file) async {
@@ -602,9 +565,8 @@ class _ExtandBrainState extends State<ExtandBrain>
   }
 
   Future getImageFromGallery() async {
-    print('i am here ');
     var image = await ImagePicker.pickImage(source: ImageSource.gallery);
-    await Images(image).CompressAndGetFile().then((file) async {
+    await Images(image).CompressAndGetFileWithoutRotation().then((file) async {
       _image = file;
       if(_image!=null) preview_path = _image.path ;
       setState(() {
@@ -613,22 +575,76 @@ class _ExtandBrainState extends State<ExtandBrain>
     });
   }
 
-  void uploadImage() async {
+
+
+  void uploadImage1() async {
     pr.show();
     print("uploading");
     await Images(_image)
-        .uploadImage(baseUrl + "uploadImage/" + _currentCity.id)
-        .then((onValue) {
+        .uploadImage(baseUrl + "/persons/image1")
+        .then((code) {
+          if(code==200){
+           _step++ ;
+            setState(() {
+              _image = null ;
+              preview_path ="";
+            });
+          }
+      pr.hide();
+      print("photo uploaded successfully");
+    });
+  }
+  void uploadImage2() async {
+    pr.show();
+    print("uploading");
+    await Images(_image)
+        .uploadImage(baseUrl + "/persons/image2")
+        .then((code) {
+          if(code==200){
+            _step++ ;
+            setState(() {
+              _image = null ;
+              preview_path ="";
+            });
+          }
+      pr.hide();
+      print("photo uploaded successfully");
+    });
+  }
+  void uploadImage3() async {
+    pr.show();
+    print("uploading");
+    await Images(_image)
+        .uploadImage(baseUrl + "/persons/image3")
+        .then((code) {
+          if(code==200){
+            _step++ ;
+            setState(() {
+              _image = null ;
+              preview_path ="";
+            });
+          }
       pr.hide();
       print("photo uploaded successfully");
     });
   }
 
   void addPersonName(String name, String data) async {
-    headers = {'name': name, 'userData': data};
+   var body = {'name': name, 'userdata': data};
     http
-        .post(baseUrl + "persons", headers: headers)
+        .post(baseUrl + "/persons/prepare" , body: json.encode(body)  ,
+       headers: {
+          "Content-Type" : "application/json"
+
+       }
+    )
         .then((http.Response response) {
+          if(response.statusCode==200){
+            _step++ ;
+            setState(() {
+
+            });
+          }
       print(response.statusCode);
     });
   }
@@ -740,6 +756,20 @@ class _ExtandBrainState extends State<ExtandBrain>
         );
       },
     );
+  }
+
+  void addPerson(){
+    http.post(baseUrl+"persons/add").then((http.Response response){
+
+      if(response.statusCode==200){
+        _flip(false);
+        _step = 1 ;
+        Timer(Duration(seconds: 2), () {
+          loadNames();
+        });
+      }
+
+    });
   }
   
   

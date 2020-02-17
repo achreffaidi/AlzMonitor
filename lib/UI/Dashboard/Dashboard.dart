@@ -45,8 +45,13 @@ class _DashboardState extends State<Dashboard> {
   @override
   void initState() {
     loadTips();
-    Emergency x = Emergency.fromSimple();
-    emrs = [x,x,x,x,x,];
+    emrs = new List();
+    emrs.add(new Emergency("ambulance","71725555","ambulance",Color.lerp(c1, Colors.white, 0.1)));
+    emrs.add(new Emergency("doctor","71744215","doctor",Color.lerp(c1, Colors.white, 0.15)));
+    emrs.add(new Emergency("fireman","198","fireman",Color.lerp(c1, Colors.white, 0.2)));
+    emrs.add(new Emergency("patient","190","patientdepartment",Color.lerp(c1, Colors.white, 0.25)));
+    emrs.add(new Emergency("police","197","police",Color.lerp(c1, Colors.white, 0.3)));
+    emrs.add(new Emergency("siren","71351500","siren",Color.lerp(c1, Colors.white, 0.35)));
     super.initState();
   }
 
@@ -69,7 +74,7 @@ class _DashboardState extends State<Dashboard> {
     return Container(
       height: MediaQuery.of(context).size.height-headerSize-56,
 
-      child: SingleChildScrollView(
+      child: Container(
         child: Container(
 
           width: MediaQuery.of(context).size.width,
@@ -268,7 +273,9 @@ class _DashboardState extends State<Dashboard> {
   }
 
   Widget getTips(){
-    return tips==null? Container():
+    return tips==null? Container(
+      height: 220,
+    ):
     Container(
       height: 320,
       margin: EdgeInsets.only(),
@@ -364,18 +371,18 @@ class Emergency{
 
   String name  ;
   String number ;
-  IconData icon ;
+  String image  ;
   Color color ;
 
   final CallsAndMessagesService _service = locator<CallsAndMessagesService>();
    Emergency.fromSimple(){
      name = "test" ; 
      number ="123456789"; 
-     icon = Icons.directions_car ;
+     image = "doctor" ;
      color = Colors.red ;
   }
 
-  Emergency(this.name, this.number, this.icon, this.color);
+  Emergency(this.name, this.number, this.image, this.color);
 
 
    Widget getWidget(){
@@ -388,7 +395,10 @@ class Emergency{
          child : Container(
            child: Column(
              children : <Widget>[
-               Icon(icon ,size: 60,color: Colors.white,) ,
+               Container(
+                   height: 60,
+                   width: 60,
+                   child: Image.asset("assets/emergency/"+image+".png",)) ,
                Text(name , style: TextStyle(fontSize: 22,fontWeight: FontWeight.w400 , color: Colors.white))
              ]
            ),

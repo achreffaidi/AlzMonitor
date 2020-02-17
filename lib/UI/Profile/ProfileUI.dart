@@ -1,7 +1,13 @@
+import 'dart:async';
+
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:flutter/material.dart';
 import 'package:kf_drawer/kf_drawer.dart';
+import 'package:monitor/Api/DeviceState.dart';
+import 'package:monitor/Api/LastScore.dart';
+import 'package:monitor/Api/ScoreList.dart';
 import 'package:monitor/Api/TaskState.dart';
+import 'package:monitor/Api/location.dart';
 import 'package:monitor/Api/memories.dart';
 import 'package:monitor/Constant/Strings.dart';
 import 'package:monitor/Constant/colors.dart';
@@ -24,13 +30,21 @@ class _ProfileUIState extends State<ProfileUI> {
 
   List<ImageProvider> images = new List();
   Memories memories ;
-
+  int _Battery =0  ;
+  String _LastSeen ="loading .. " ;
+  String location = "loading ..";
 
 
   @override
   void initState() {
     loadTaskState();
     loadPicture() ;
+    const oneSec = const Duration(seconds:60);
+    new Timer.periodic(oneSec, (Timer t) =>_loadDeviceState() );
+    _loadDeviceState() ;
+    loadLocation() ;
+    loadLastGame();
+    loadGameHistory() ;
     super.initState();
   }
 
@@ -227,11 +241,10 @@ controller: sc,
                   //  getCard(getTasksBoard(), 220) ,
                     SizedBox(height: 40,),
 
-                    getCard(getDeviceBoard(), 200) ,
-
                     getCarsouletCard(getMemoriesBoard(), 380) ,
-                    getCard(getGameBoardLast(), 200) ,
-                    getCard(getGameBoardHist(), 260) ,
+                    getCard((_lastGame==null)? Container(child: Center(child : CircularProgressIndicator()),):getGameBoardLast(), 200) ,
+                    getCard((_scoreList==null)? Container(child: Center(child : CircularProgressIndicator()),):getGameBoardHist(), 260) ,
+                    getCard(getDeviceBoard(), 200) ,
 
 
                   ],
@@ -305,13 +318,15 @@ controller: sc,
               children: <Widget>[
                 Container(
                   width: size,
+                  height: size*0.6,
                   child:
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    mainAxisSize: MainAxisSize.max,
                     children: <Widget>[
-                      Text("Last Seen : 2 hours") ,
-                      Text("Position : In the Safe Zone") ,
+                      Text("Last Seen :  "+_LastSeen , style: TextStyle(fontWeight: FontWeight.bold),) ,
+                      Text("Position    :  "+location, style: TextStyle(fontWeight: FontWeight.bold),) ,
                     ],
                   ),
                 ) ,
@@ -320,7 +335,7 @@ controller: sc,
                   child : new CircularPercentIndicator(
                     radius  : size*0.6,
                     lineWidth: 14.0,
-                    percent: 0.60,
+                    percent: _Battery/100,
                     center: new Icon(Icons.battery_charging_full , size: 50,),
                     progressColor: Colors.yellow,
                   ),)
@@ -333,6 +348,8 @@ controller: sc,
 
 
   }
+
+
 
   Widget getMemoriesBoard(){
 
@@ -382,10 +399,10 @@ controller: sc,
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: <Widget>[
 
-                        Text("52",style: TextStyle(color: Colors.blue , fontWeight: FontWeight.bold,fontSize: 50),) ,
+                        Text(_lastGame.lastScore.questionsNumber.toString(),style: TextStyle(color: Colors.blue , fontWeight: FontWeight.bold,fontSize: 50),) ,
                         Padding(
                           padding: const EdgeInsets.only(bottom : 8.0 , left: 8),
-                          child: Text("Game Played",style: TextStyle(color: Colors.grey ,fontSize: 18),),
+                          child: Text("Questions",style: TextStyle(color: Colors.grey ,fontSize: 18),),
                         ) ,
                       ],) ,
                   ) ,
@@ -402,12 +419,12 @@ controller: sc,
                           Container(
                             height: size/1.8 ,
                             width: size/1.8,
-                            child: DonutPieChart.withSampleData(),
+                            child: DonutPieChart.fromData(_lastGame),
                           ) ,
                           Column(
                             children: <Widget>[
-                              Row(children: <Widget>[Icon(Icons.adjust , color: Colors.green,) , Text("Correct")],),
-                              Row(children: <Widget>[Icon(Icons.adjust , color: Colors.red,) , Text("Wrong")],),
+                              Row(children: <Widget>[Icon(Icons.adjust , color: Colors.purple,) , Text("Correct")],),
+                              Row(children: <Widget>[Icon(Icons.adjust , color: Colors.blue,) , Text("Wrong")],),
                             ],
                           )
 
@@ -527,7 +544,7 @@ controller: sc,
                 width: size*2,
                 height: size,
                 padding: EdgeInsets.symmetric(horizontal: 5),
-                child: SimpleTimeSeriesChart.withSampleData(),
+                child: SimpleTimeSeriesChart.withSampleData(_scoreList),
               ),
             ],
           )
@@ -589,5 +606,71 @@ controller: sc,
 
 
   }
+
+  void _loadDeviceState(){
+    http.get(baseUrl+"getPhoneState").then((http.Response response){
+
+      if(response.statusCode == 200){
+        DeviceState  ds = DeviceState.fromJson(response.body)   ;
+        _LastSeen  = _convertTime(ds.difference)  ;
+        _Battery = ds.battery ;
+
+        setState(() {
+
+        });
+      }
+    }) ;
+
+
+  }
+
+  String _convertTime(int s ){
+
+    if(s<60) return "Connected" ;
+    if(s<3600) return (s/60).floor().toString()+" minuts" ;
+    return (s/3600).floor().toString()+" hours" ;
+  }
+
+  void loadLocation(){
+
+    http.get(baseUrl+"getPosition").then((http.Response response){
+
+      Location location = Location.fromJson(response.body) ;
+      this.location = location.message ;
+
+      setState(() {
+
+      });
+
+    });
+  }
+  LastGame _lastGame;
+  ScoreList _scoreList ;
+  void loadLastGame(){
+
+    http.get(baseUrl+"score/last").then((http.Response response){
+
+      _lastGame = LastGame.fromJson(response.body) ;
+
+
+      setState(() {
+
+      });
+
+    });
+  }
+  void loadGameHistory(){
+
+    http.get(baseUrl+"getscore").then((http.Response response){
+
+      _scoreList = ScoreList.fromJson(response.body) ;
+      setState(() {
+
+      });
+
+    });
+  }
+
+
 
 }

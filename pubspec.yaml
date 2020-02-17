@@ -80,6 +80,13 @@ flutter:
     - assets/homebackground.png
     - assets/facereco.png
     - assets/form.png
+    - assets/emergency/ambulance.png
+    - assets/emergency/doctor.png
+    - assets/emergency/fireman.png
+    - assets/emergency/patientdepartment.png
+    - assets/emergency/police.png
+    - assets/emergency/shield.png
+    - assets/emergency/siren.png
     - assets/heartbeat.flr
 
   # An image asset can refer to one or more resolution-specific "variants", see

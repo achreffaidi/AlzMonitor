@@ -419,14 +419,18 @@ class _TaskDetailsState extends State<TaskDetails> {
     return Column(
       children: <Widget>[
         Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Text(
               "Description : ",
               style: _titleStyle,
             ),
-            Text(
-              item.description,
-              style: TextStyle(fontSize: 22),
+            Container(
+              width: 250,
+              child: Text(
+                item.description,
+                style: TextStyle(fontSize: 22),
+              ),
             ),
           ],
         ),

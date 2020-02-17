@@ -103,7 +103,7 @@ class _MapUIState extends State<MapUI> {
 
   Location location ;
 
-  Widget getLocation(){
+  void getLocation(){
 
     http.get(baseUrl+"getPosition").then((http.Response response){
 

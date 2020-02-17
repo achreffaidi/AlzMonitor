@@ -265,7 +265,6 @@ loadPicture() ;    });
 
   void deletePicture(String id) async {
     print(baseUrl + 'memories/delete/' + id.toString());
-      //TODO  Change URL
     await http
         .post(baseUrl + 'memories/delete/' + id)
         .then((http.Response response) {
@@ -286,14 +285,18 @@ loadPicture() ;    });
     return Column(
       children: <Widget>[
         Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Text(
               "Description : ",
               style: _titleStyle,
             ),
-            Text(
-              item.description,
-              style: TextStyle(fontSize: 22),
+            Container(
+              width: 250,
+              child: Text(
+                item.description,
+                style: TextStyle(fontSize: 22),
+              ),
             ),
           ],
         ),
