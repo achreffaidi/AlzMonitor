@@ -200,12 +200,7 @@ class _MyHomePageState extends State<MyHomePage> {
             color: Colors.white,
           ),
           onPressed: () {
-            Navigator.of(context).push(CupertinoPageRoute(
-              fullscreenDialog: true,
-              builder: (BuildContext context) {
-                return HomeScreen();
-              },
-            ));
+
           },
         ),
         decoration: BoxDecoration(
