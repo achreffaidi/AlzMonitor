@@ -54,7 +54,7 @@ class _SettingsState extends State<Settings> {
           children: <Widget>[
             AppBar(
               backgroundColor: Colors.transparent,
-              title: Text("Profile", style: TextStyle(color: Colors.white , fontWeight: FontWeight.bold),),
+              title: Text("Settings", style: TextStyle(color: Colors.white , fontWeight: FontWeight.bold),),
               elevation: 0,
               leading: IconButton(
                 icon: Icon(Icons.menu,color: Colors.white,),
