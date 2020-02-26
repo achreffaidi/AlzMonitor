@@ -206,6 +206,8 @@ class _TasksUIState extends State<TasksUI> {
   }
   void setDone(String id) async {
     http.get(baseUrl+"setdone/"+id).then((http.Response response){
+
+      loadTask(selected);
       print(response.statusCode);
     });
 
@@ -213,11 +215,15 @@ class _TasksUIState extends State<TasksUI> {
   }
   void setUnDone(String id) async {
     http.get(baseUrl+"setundone/"+id).then((http.Response response){
+
+      loadTask(selected);
       print(response.statusCode);
     });
 
 
   }
+
+
 /*
   String getDayName(int day){
 
@@ -395,7 +401,22 @@ mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         (
                           itemCount: listTempTask.length,
                           itemBuilder: (BuildContext ctxt, int index) {
-                            return listTempTask[index].getTask();
+                            return GestureDetector(
+                              child : listTempTask[index].getTask() ,
+                              onTap: (){
+                                if(listTempTask[index].done==true){
+                                  listTempTask[index].done = false ;
+                                  setState(() {});
+                                  setUnDone(listTempTask[index].id);
+
+                                }else{
+                                  listTempTask[index].done = true ;
+                                  setState(() {});
+                                  setDone(listTempTask[index].id);
+                                }
+
+                              },
+                            );
                           }
                       ),
                     ),
@@ -498,7 +519,7 @@ List<TempTask> listTempTask ;
       done = 0 ;
       total = tasks.length  ;
       for(tsk.ListByDay t in tasks){
-        listTempTask.add(new TempTask(t.title,t.time,t.done));
+        listTempTask.add(new TempTask(t.title,t.time,t.done,t.id));
         if(t.done) done++;
       }
 
@@ -634,11 +655,12 @@ class MyExpanded {
 
 class TempTask{
 
+  String id ;
   String name ;
   String time;
   bool done ;
   double circle = 30 ;
-  TempTask(this.name, this.time, this.done);
+  TempTask(this.name, this.time, this.done ,this.id);
 
   getTask(){
     return Container(
@@ -680,6 +702,8 @@ class TempTask{
 
 
   }
+
+
 
 
 }

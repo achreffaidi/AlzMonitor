@@ -456,15 +456,27 @@ class _CreateTaskState extends State<CreateTask> {
 
   }
 
+
+  String convertTime(var time){
+
+    var m =time.minute.toString();
+    var h=time.hour.toString();
+    if(time.minute<10) m="0"+time.minute.toString() ;
+    if(time.hour<10) m="0"+time.hour.toString() ;
+    return h+':'+m ;
+
+
+  }
   void uploadImage() async {
     pr.show();
     Map<String,String> headers = {
       "title":_nameTask.text.toString() ,
       "description" : _description.text.toString() ,
       "day" : day.toString(),
+      "priority": priorities.selected.toString(),
       "category" : categories.names[categories.selected],
       "withImage" : (_image != null).toString(),
-      "time" : _time.format(context)
+      "time" : convertTime(_time)
     };
     if(_image==null){
       http.post(baseUrl+"addTask",headers: headers).then((http.Response response){
@@ -484,10 +496,13 @@ class _CreateTaskState extends State<CreateTask> {
         print("photo uploaded successfully");
         Navigator.pop(context);
       });
-    });//TODO update the link
+    });
 
 
   }
+
+
+
 
 
 }

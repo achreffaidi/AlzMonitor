@@ -250,11 +250,22 @@ class _TaskDetailsState extends State<TaskDetails> {
                                   padding: EdgeInsets.only(left: 20 ,top: 8 ,bottom: 8),
                                   child: Row(
                                     children: <Widget>[
-                                      Icon(
-                                        item.done
-                                            ? Icons.check_box
-                                            : Icons.check_box_outline_blank,
-                                        color: Colors.white,
+                                      GestureDetector(
+                                        onTap:(){
+                                          if(item.done==true){
+                                            setUnDone(item.id);
+                                            setState(()=> item.done = false);
+                                          }else{
+                                            setDone(item.id);
+                                            setState(()=> item.done = true);
+                                          }
+                              },
+                                        child: Icon(
+                                          item.done
+                                              ? Icons.check_box
+                                              : Icons.check_box_outline_blank,
+                                          color: Colors.white,
+                                        ),
                                       ),
                                       SizedBox(
                                         width: 20,
@@ -378,11 +389,11 @@ class _TaskDetailsState extends State<TaskDetails> {
       List<tsk.ListByDay> tasks =
           tsk.TasksByDay.fromJson(response.body).listByDay;
       print(response.body);
-      tasks.sort((tsk.ListByDay item1, tsk.ListByDay item2) {
-        if (item1.done == item2.done) return 0;
-        if (item1.done & !item2.done) return 1;
-        return -1;
-      });
+//      tasks.sort((tsk.ListByDay item1, tsk.ListByDay item2) {
+//        if (item1.done == item2.done) return 0;
+//        if (item1.done & !item2.done) return 1;
+//        return -1;
+//      });
 
       list = tasks;
       expanded = new List(list.length);
@@ -394,14 +405,14 @@ class _TaskDetailsState extends State<TaskDetails> {
 
   void setDone(String id) async {
     http.get(baseUrl + "setdone/" + id).then((http.Response response) {
-      //   loadTask();
+         loadTask(day);
       print(response.statusCode);
     });
   }
 
   void setUnDone(String id) async {
     http.get(baseUrl + "setundone/" + id).then((http.Response response) {
-      //   loadTask();
+         loadTask(day);
       print(response.statusCode);
     });
   }

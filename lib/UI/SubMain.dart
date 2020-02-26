@@ -13,13 +13,13 @@ class SubMain extends KFDrawerContent {
 }
 
 class _SubMainState extends State<SubMain> {
-  int _currentIndex = 0;
+  int _currentIndex = 1;
   PageController _pageController;
 
   @override
   void initState() {
     super.initState();
-    _pageController = PageController();
+    _pageController = PageController(initialPage: 1);
 
 
   }

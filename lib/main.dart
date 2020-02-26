@@ -1,18 +1,13 @@
-import 'dart:io';
 
 import 'package:flare_flutter/flare_actor.dart';
-import 'package:flare_splash_screen/flare_splash_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:get_it/get_it.dart';
 import 'package:kf_drawer/kf_drawer.dart';
-import 'package:monitor/tools/CameraController.dart';
-import 'package:monitor/tools/Images.dart';
-import 'package:camera/camera.dart';
+
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
+
 import 'package:google_map_location_picker/generated/i18n.dart' as location_picker;
-import 'Constant/colors.dart';
 import 'UI/ExtandBrain/ExtandBrain.dart';
 import 'UI/HomeScreen.dart';
 import 'UI/Profile/ProfileUI.dart';
@@ -90,7 +85,6 @@ class MyHomePage extends StatefulWidget {
 
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
 
 
   KFDrawerController _drawerController;
@@ -140,7 +134,6 @@ class _MyHomePageState extends State<MyHomePage> {
             style: textStyle,
           ),
           icon: Icon(Icons.help, color: Colors.white),
-          page: Settings(),
         ),
         KFDrawerItem(
             text: Center(
