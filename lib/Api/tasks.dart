@@ -5,10 +5,10 @@
 import 'dart:convert';
 
 class Tasks {
-  List<ListElement> list;
+  List<ListByDay> listByDay;
 
   Tasks({
-    this.list,
+    this.listByDay,
   });
 
   factory Tasks.fromJson(String str) => Tasks.fromMap(json.decode(str));
@@ -16,46 +16,74 @@ class Tasks {
   String toJson() => json.encode(toMap());
 
   factory Tasks.fromMap(Map<String, dynamic> json) => Tasks(
-    list: json["list"] == null ? null : List<ListElement>.from(json["list"].map((x) => ListElement.fromMap(x))),
+    listByDay: json["listByDay"] == null ? null : List<ListByDay>.from(json["listByDay"].map((x) => ListByDay.fromMap(x))),
   );
 
   Map<String, dynamic> toMap() => {
-    "list": list == null ? null : List<dynamic>.from(list.map((x) => x.toMap())),
+    "listByDay": listByDay == null ? null : List<dynamic>.from(listByDay.map((x) => x.toMap())),
   };
 }
 
-class ListElement {
-  int id;
-  int day;
-  String time;
-  String title;
+class ListByDay {
   bool done;
+  String image;
+  String id;
+  String title;
+  String description;
+  int priority;
+  String time;
+  String voice;
+  String voiceLink;
+  String name;
+  int day;
+  int v;
 
-  ListElement({
-    this.id,
-    this.day,
-    this.time,
-    this.title,
+  ListByDay({
     this.done,
+    this.image,
+    this.id,
+    this.title,
+    this.description,
+    this.priority,
+    this.time,
+    this.voice,
+    this.voiceLink,
+    this.name,
+    this.day,
+    this.v,
   });
 
-  factory ListElement.fromJson(String str) => ListElement.fromMap(json.decode(str));
+  factory ListByDay.fromJson(String str) => ListByDay.fromMap(json.decode(str));
 
   String toJson() => json.encode(toMap());
 
-  factory ListElement.fromMap(Map<String, dynamic> json) => ListElement(
-    id: json["id"] == null ? null : json["id"],
-    day: json["day"] == null ? null : json["day"],
-    time: json["time"] == null ? null : json["time"],
-    title: json["title"] == null ? null : json["title"],
+  factory ListByDay.fromMap(Map<String, dynamic> json) => ListByDay(
     done: json["done"] == null ? null : json["done"],
+    image: json["image"] == null ? null : json["image"],
+    id: json["_id"] == null ? null : json["_id"],
+    title: json["title"] == null ? null : json["title"],
+    description: json["description"] == null ? null : json["description"],
+    priority: json["priority"] == null ? null : json["priority"],
+    time: json["time"] == null ? null : json["time"],
+    voice: json["voice"] == null ? null : json["voice"],
+    voiceLink: json["voiceLink"] == null ? null : json["voiceLink"],
+    name: json["name"] == null ? null : json["name"],
+    day: json["day"] == null ? null : json["day"],
+    v: json["__v"] == null ? null : json["__v"],
   );
 
   Map<String, dynamic> toMap() => {
-    "id": id == null ? null : id,
-    "day": day == null ? null : day,
-    "time": time == null ? null : time,
-    "title": title == null ? null : title,
     "done": done == null ? null : done,
+    "image": image == null ? null : image,
+    "_id": id == null ? null : id,
+    "title": title == null ? null : title,
+    "description": description == null ? null : description,
+    "priority": priority == null ? null : priority,
+    "time": time == null ? null : time,
+    "voice": voice == null ? null : voice,
+    "voiceLink": voiceLink == null ? null : voiceLink,
+    "name": name == null ? null : name,
+    "day": day == null ? null : day,
+    "__v": v == null ? null : v,
   };
 }

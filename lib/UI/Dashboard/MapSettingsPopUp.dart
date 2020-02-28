@@ -91,14 +91,25 @@ class _MapSettingsPopUpState extends State<MapSettingsPopUp> {
 
 
   _saveMapSettings() async {
+
+
+    var headers  ;
     if(_position!=null)
-    http.get(baseUrl+"setSafeZone" , headers: {
+    headers = {
       "lat":_position.latitude.toString() ,
       "lang":_position.longitude.toString() ,
       "safedistance":_value.toString() ,
 
-    }).then((http.Response response){
+    } ;
+    else headers = {
 
+      "safedistance":_value.toString() ,
+
+    } ;
+
+    http.get(baseUrl+"setSafeZone" , headers: headers).then((http.Response response){
+
+      print(response.statusCode) ;
       if(response.statusCode==200)  Navigator.pop(context);
 
     });

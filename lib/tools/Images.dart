@@ -21,6 +21,16 @@ class Images {
 
     return result;
   }
+  Future<File> CompressAndGetFileRotateDir() async {
+    var result = await FlutterImageCompress.compressAndGetFile(
+        originalFile.absolute.path, originalFile.absolute.path + "_compressed",
+        quality: 50, minHeight: 600, minWidth: 600,rotate: -90);
+
+    print(originalFile.lengthSync());
+    print(result.lengthSync());
+
+    return result;
+  }
   Future<File> CompressAndGetFileWithoutRotation() async {
     var result = await FlutterImageCompress.compressAndGetFile(
         originalFile.absolute.path, originalFile.absolute.path + "_compressed",
@@ -52,7 +62,7 @@ class Images {
     return File('$path' + '/tempFile.file').create(recursive: true);
   }
 
-  Future<void> uploadImage(url) async {
+  Future<int> uploadImage(url) async {
     var uri = Uri.parse(url);
     print(url);
     var request = new http.MultipartRequest("POST", uri);
@@ -64,7 +74,7 @@ class Images {
     var response = await request.send();
 
     print(response.headers);
-
+    return response.statusCode;
 
   }
   Future<void> uploadImageWithHeaders(url , headers) async {

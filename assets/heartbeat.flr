@@ -4,11 +4,11 @@
 		{
 			"name": "Artboard",
 			"translation": [
-				9.399999618530273,
-				-7.960205997641469e-16
+				0,
+				0
 			],
-			"width": 512,
-			"height": 846,
+			"width": 310,
+			"height": 240,
 			"origin": [
 				0,
 				0
@@ -187,10 +187,10 @@
 					"type": "colorStroke"
 				},
 				{
-					"name": "Rectangle",
+					"name": "Main",
 					"translation": [
-						134.5,
-						72.5
+						5,
+						134.9759521484375
 					],
 					"rotation": 0,
 					"scale": [
@@ -207,97 +207,8 @@
 					"type": "shape"
 				},
 				{
-					"name": "Color",
-					"parent": 3,
-					"opacity": 1,
-					"color": [
-						0.800000011920929,
-						0.800000011920929,
-						0.800000011920929,
-						1
-					],
-					"width": 1,
-					"cap": 0,
-					"join": 0,
-					"trim": 0,
-					"type": "colorStroke"
-				},
-				{
-					"name": "Color",
-					"parent": 3,
-					"opacity": 1,
-					"color": [
-						0.5887500047683716,
-						0.125,
-						1,
-						1
-					],
-					"fillRule": 1,
-					"type": "colorFill"
-				},
-				{
-					"name": "Rectangle Path",
-					"parent": 3,
-					"translation": [
-						123,
-						345.8833923339844
-					],
-					"rotation": 0,
-					"scale": [
-						1,
-						1
-					],
-					"opacity": 1,
-					"isCollapsed": false,
-					"clips": [],
-					"width": 514,
-					"height": 848,
-					"cornerRadius": 0,
-					"type": "rectangle"
-				},
-				{
-					"name": "Rectangle Path",
-					"parent": 3,
-					"translation": [
-						-211,
-						444
-					],
-					"rotation": 0,
-					"scale": [
-						1,
-						1
-					],
-					"opacity": 1,
-					"isCollapsed": false,
-					"clips": [],
-					"width": 20,
-					"height": 2,
-					"cornerRadius": 0,
-					"type": "rectangle"
-				},
-				{
-					"name": "Main",
-					"translation": [
-						100.70555114746094,
-						420.2519836425781
-					],
-					"rotation": 0,
-					"scale": [
-						1,
-						1
-					],
-					"opacity": 1,
-					"isCollapsed": false,
-					"clips": [],
-					"isVisible": true,
-					"blendMode": 3,
-					"drawOrder": 3,
-					"transformAffectsStroke": false,
-					"type": "shape"
-				},
-				{
 					"name": "Path",
-					"parent": 8,
+					"parent": 3,
 					"translation": [
 						0,
 						0
@@ -423,8 +334,8 @@
 				},
 				{
 					"name": "Color",
-					"parent": 8,
-					"opacity": 3,
+					"parent": 3,
+					"opacity": 1,
 					"color": [
 						1,
 						1,
@@ -439,56 +350,6 @@
 					"end": 0,
 					"offset": 0,
 					"type": "colorStroke"
-				},
-				{
-					"name": "text2image_H3013023_20191208_81042",
-					"translation": [
-						253.683837890625,
-						181.17372131347656
-					],
-					"rotation": 0,
-					"scale": [
-						2,
-						2
-					],
-					"opacity": 1,
-					"isCollapsed": false,
-					"clips": [],
-					"isVisible": true,
-					"blendMode": 3,
-					"drawOrder": 4,
-					"bones": [],
-					"atlas": 0,
-					"numVertices": 4,
-					"vertices": [
-						-75,
-						-75,
-						0.00390625,
-						0.00390625,
-						75,
-						-75,
-						0.58984375,
-						0.00390625,
-						75,
-						75,
-						0.58984375,
-						0.58984375,
-						-75,
-						75,
-						0.00390625,
-						0.58984375
-					],
-					"isDynamic": false,
-					"numTriangles": 2,
-					"triangles": [
-						3,
-						0,
-						1,
-						1,
-						2,
-						3
-					],
-					"type": "image"
 				}
 			],
 			"animations": [
@@ -499,10 +360,10 @@
 					"isLooping": true,
 					"keyed": [
 						{
-							"component": 8
+							"component": 3
 						},
 						{
-							"component": 10,
+							"component": 5,
 							"strokeEnd": [
 								[
 									{
@@ -550,11 +411,5 @@
 			],
 			"type": "artboard"
 		}
-	],
-	"atlases": {
-		"isOOB": false,
-		"data": [
-			"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAYAAABccqhmAAAJVklEQVR4Xu3a0VIiSxAE0PX/P9ob+0Bcl4DpTgQcs86+WujkqZ50wP344x8BAmMFPsYmF5wAgT8KwCEgMFhAAQxevugEFIAzQGCwgAIYvHzRCSgAZ4DAYAEFMHj5ohNQAM4AgcECCmDw8kUnoACcAQKDBRTA4OWLTkABOAMEBgsogMHLF52AAnAGCAwWUACDly86AQXgDBAYLKAABi9fdAIKwBkgMFhAAQxevugEFIAzQGCwgAIYvHzRCSgAZ4DAYAEFMHj5ohNQAM4AgcECCmDw8kUnoACcAQKDBRTA4OWLTkABOAMEBgsogMHLF52AAnAGCAwWUACDly86AQXgDBAYLKAABi9fdAIKwBkgMFhAAQxevugEFIAzQGCwgAIYvHzRCSgAZ4DAYAEFMHj5ohNQAM4AgcECCmDw8kUnoACcAQKDBRTA4OWLTkABOAMEBgsogMHLF52AAnAGCAwWUACDly86AQXgDBAYLKAABi9fdAIKwBkgMFhAAQxevugEFIAzQGCwgAIYvHzRCSgAZ4DAYAEFMHj5ohNQAM4AgcECCmDw8kUnoACcAQKDBRTA4OWLTkABOAMEBgsogMHLF52AAnAGCAwWUACDly86AQXgDBAYLKAABi9fdAIKwBkgMFggKoDPz8/Pi9XHx8c/r/36tR3P69fvvGbqzJH7VBO5nyPwYwVwr0ieE6vruyiArn2eKc1LCuDeb/dbTwmeBNbHQQGsjUw8JvDWArhcogOdLYtX5mV6X+DHC+DvpXoKOF6YAtg/0CYzgVMWwNEHirfK4voGOXqrce97J29bjj6/eMW17HzPoyL9juet46Sws5vszNM/XgCP/jXh6+vSv0DcW8hZryXJ944MCuDMt3R2bW8rgJ3fvEcz11/7bgH8ff0j3/PR1x2t5dHv+c7XXX6Wmz+7wc4+/ZIC2A199Ntq9aj/9ZH36Eb+O5fc6Jefu3rffe97vvpabj3q71zLMz1392vu/AI/VgCrA7nznvyRm3X3564K4LpYfuO1PJrh/MfaFe4KvKQAVo/nOzf3ToB33XRnupYdu1suz8yw873M/A6BlxfAhWH1aHzrUX1FqAD+F7r1xJJ8eHjvLZX3/KtT+Lu//rYCWL0Xv/c4usO7elx/5Our19y7rtXrHvn66jXPfpTf+Xk7ezFzfgEFcPUh4e5ThQI4/+F2hWuBtxbA6ikgfZuwe7OufqPtPD4/68PDV1zLzl8Bvj7ifz0Wq+zeAqxvot888fYCOCqBW+9Zjz7QemcB3HuPfFn+u6/lcj3JnzifleE3H3jX/q/AqQog+SDw3l8adn9Tr34Lnulakg/zjv5vxdHhTzzdRD0CP1IA6VuBa+7v/AeitCBWN987ruX6Mf3oSenW0Xx2hp7jL0lUALgIEOgSUABd+5SGQCSgACIuwwS6BBRA1z6lIRAJKICIyzCBLgEF0LVPaQhEAgog4jJMoEtAAXTtUxoCkYACiLgME+gSUABd+5SGQCSgACIuwwS6BBRA1z6lIRAJKICIyzCBLgEF0LVPaQhEAgog4jJMoEtAAXTtUxoCkYACiLgME+gSUABd+5SGQCSgACIuwwS6BBRA1z6lIRAJKICIyzCBLgEF0LVPaQhEAgog4jJMoEtAAXTtUxoCkYACiLgME+gSUABd+5SGQCSgACIuwwS6BBRA1z6lIRAJKICIyzCBLgEF0LVPaQhEAgog4jJMoEtAAXTtUxoCkYACiLgME+gSUABd+5SGQCSgACIuwwS6BBRA1z6lIRAJKICIyzCBLgEF0LVPaQhEAgog4jJMoEtAAXTtUxoCkYACiLgME+gSUABd+5SGQCSgACIuwwS6BBRA1z6lIRAJKICIyzCBLgEF0LVPaQhEAgog4jJMoEtAAXTtUxoCkYACiLgME+gSUABd+5SGQCSgACIuwwS6BBRA1z6lIRAJKICIyzCBLgEF0LVPaQhEAgog4jJMoEtAAXTtUxoCkYACiLgME+gSUABd+5SGQCSgACIuwwS6BBRA1z6lIRAJKICIyzCBLgEF0LVPaQhEAgog4jJMoEtAAXTtUxoCkYACiLgME+gSUABd+5SGQCSgACIuwwS6BBRA1z6lIRAJKICIyzCBLgEF0LVPaQhEAgog4jJMoEtAAXTtUxoCkYACiLgME+gSUABd+5SGQCSgACIuwwS6BBRA1z6lIRAJKICIyzCBLgEF0LVPaQhEAgog4jJMoEtAAXTtUxoCkYACiLgME+gSUABd+5SGQCSgACIuwwS6BBRA1z6lIRAJKICIyzCBLgEF0LVPaQhEAgog4jJMoEtAAXTtUxoCkYACiLgME+gSUABd+5SGQCSgACIuwwS6BBRA1z6lIRAJKICIyzCBLgEF0LVPaQhEAgog4jJMoEtAAXTtUxoCkYACiLgME+gSUABd+5SGQCSgACIuwwS6BBRA1z6lIRAJKICIyzCBLgEF0LVPaQhEAgog4jJMoEtAAXTtUxoCkYACiLgME+gSUABd+5SGQCSgACIuwwS6BBRA1z6lIRAJKICIyzCBLgEF0LVPaQhEAgog4jJMoEtAAXTtUxoCkYACiLgME+gSUABd+5SGQCSgACIuwwS6BBRA1z6lIRAJKICIyzCBLgEF0LVPaQhEAgog4jJMoEtAAXTtUxoCkYACiLgME+gSUABd+5SGQCSgACIuwwS6BBRA1z6lIRAJKICIyzCBLgEF0LVPaQhEAgog4jJMoEtAAXTtUxoCkYACiLgME+gSUABd+5SGQCSgACIuwwS6BBRA1z6lIRAJKICIyzCBLgEF0LVPaQhEAgog4jJMoEtAAXTtUxoCkYACiLgME+gSUABd+5SGQCSgACIuwwS6BBRA1z6lIRAJKICIyzCBLgEF0LVPaQhEAgog4jJMoEtAAXTtUxoCkYACiLgME+gSUABd+5SGQCSgACIuwwS6BBRA1z6lIRAJKICIyzCBLgEF0LVPaQhEAgog4jJMoEtAAXTtUxoCkYACiLgME+gSUABd+5SGQCSgACIuwwS6BBRA1z6lIRAJKICIyzCBLgEF0LVPaQhEAgog4jJMoEtAAXTtUxoCkYACiLgME+gSUABd+5SGQCSgACIuwwS6BBRA1z6lIRAJKICIyzCBLgEF0LVPaQhEAgog4jJMoEtAAXTtUxoCkYACiLgME+gSUABd+5SGQCSgACIuwwS6BP4DsTNtLguTHikAAAAASUVORK5CYII="
-		]
-	}
+	]
 }

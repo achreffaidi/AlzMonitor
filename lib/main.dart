@@ -1,16 +1,31 @@
-import 'dart:io';
 
-import 'package:flare_splash_screen/flare_splash_screen.dart';
+import 'package:flare_flutter/flare_actor.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
-import 'package:monitor/tools/CameraController.dart';
-import 'package:monitor/tools/Images.dart';
-import 'package:camera/camera.dart';
-import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:google_map_location_picker/generated/i18n.dart' as location_picker;
-import 'UI/HomeScreen.dart';
+import 'package:get_it/get_it.dart';
+import 'package:kf_drawer/kf_drawer.dart';
 
-void main() => runApp(MyApp());
+import 'package:flutter/material.dart';
+
+import 'package:google_map_location_picker/generated/i18n.dart' as location_picker;
+import 'UI/ExtandBrain/ExtandBrain.dart';
+import 'UI/HomeScreen.dart';
+import 'UI/Profile/ProfileUI.dart';
+import 'UI/Settings/Settings.dart';
+import 'UI/SubMain.dart';
+import 'UI/Dashboard/Dashboard.dart';
+
+void main() {
+  setupLocator();
+  runApp(MyApp());
+}
+
+
+GetIt locator = GetIt();
+
+void setupLocator() {
+  locator.registerSingleton(CallsAndMessagesService());
+}
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -66,29 +81,130 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
+
+
+
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
 
 
+  KFDrawerController _drawerController;
+
+  @override
+  void initState() {
+
+    TextStyle textStyle = new TextStyle(color: Colors.white ,fontWeight: FontWeight.w300  , fontSize: 30) ;
+    _drawerController = KFDrawerController(
+      initialPage: SubMain(),
+
+      items: [
+        KFDrawerItem.initWithPage(
+          text: Text('Home', style: textStyle),
+          icon: Icon(Icons.home, color: Colors.white),
+          page: SubMain(),
+        ),
+        KFDrawerItem.initWithPage(
+          text: Text('Profile', style: textStyle),
+          icon: Icon(Icons.supervised_user_circle, color: Colors.white),
+          page: ProfileUI(),
+        ),
+
+
+        KFDrawerItem.initWithPage(
+          text: Text(
+            'Face Recognition',
+            style: textStyle,
+          ),
+          icon: Icon(Icons.cloud_upload, color: Colors.white),
+          page: ExtandBrain(),
+        ),
+
+
+
+        KFDrawerItem.initWithPage(
+          text: Text(
+            'SETTINGS',
+            style: textStyle,
+          ),
+          icon: Icon(Icons.settings, color: Colors.white),
+          page: Settings(),
+        ),
+        KFDrawerItem.initWithPage(
+          text: Text(
+            'GET HELP',
+            style: textStyle,
+          ),
+          icon: Icon(Icons.help, color: Colors.white),
+        ),
+        KFDrawerItem(
+            text: Center(
+              child: Container(
+                  margin: EdgeInsets.only(top : 30),
+                  height: 100,
+                  width: 220,
+                  child: FlareActor("assets/heartbeat.flr", alignment:Alignment.center, fit:BoxFit.fill, animation:"Untitled")),
+            )
+        ),
+        KFDrawerItem.initWithPage(
+          text: Container(height: 300,),
+          icon: Container(),
+          page: HomeScreen(),
+        ),
+      ],
+    );
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
+    
     return Scaffold(
+      body: KFDrawer(
+        controller: _drawerController,
 
-      body: HomeScreen(),/*Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Container(
-          child : _getChild()
+        header: Align(
+          alignment: Alignment.centerLeft,
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 16.0),
+            width: MediaQuery.of(context).size.width * 0.6,
+            child: Container(
+              padding: EdgeInsets.only(top: 40 , bottom: 50),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Container(height: 70 ,width: 70,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    image: DecorationImage(image: Image.network("https://s.marketwatch.com/public/resources/images/MW-GG584_elonmu_ZH_20180401183848.jpg").image ,fit: BoxFit.cover)
+                  ),) ,
+                  Container( padding: EdgeInsets.only(left: 60), child: Text("Elon Musk" ,style: TextStyle(color: Colors.white ,fontWeight: FontWeight.w300 , fontSize: 30),),)
+                ],
+              ),
+            ),
+          ),
         ),
-      )*/
-       // This trailing comma makes auto-formatting nicer for build methods.
+        footer: KFDrawerItem(
+
+          text: Text(
+            'Logout',
+            style: TextStyle(color: Colors.white , fontWeight: FontWeight.w300 , fontSize: 20 ),
+          ),
+          icon: Icon(
+            Icons.input,
+            color: Colors.white,
+          ),
+          onPressed: () {
+
+          },
+        ),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [Color.fromRGBO(166, 114, 255, 1.0), Color.fromRGBO(109, 91, 254, 1.0)],
+            tileMode: TileMode.clamp,
+          ),
+        ),
+      ),
     );
   }
 
